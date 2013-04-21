@@ -2,7 +2,6 @@
 
 package dataobjects;
 
-import models.*;
 import java.util.Properties;
 
 class Util {

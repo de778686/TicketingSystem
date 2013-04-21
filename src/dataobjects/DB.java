@@ -3,7 +3,6 @@
 
 package dataobjects;
 
-import models.*;
 import java.sql.*;
 import java.util.Properties;
 
@@ -13,8 +12,9 @@ public class DB {
 
   private static Model model = Model.mysql; // Model.mysql or Model.sqlite
   
+  // Changed from models to dataobjects
   private static String props_file 
-    = "models" + java.io.File.separator + model + ".properties";
+    = "dataobjects" + java.io.File.separator + model + ".properties";
   
   private static Connection cx = null;
 

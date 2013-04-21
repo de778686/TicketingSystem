@@ -15,7 +15,6 @@
 
 package dataobjects;
 
-import models.*;
 import java.sql.*;
 import java.util.*;
 
@@ -26,25 +25,53 @@ public class Technicians implements DBTable {
   @Override
   public String getTableName() { return table; }
   
-  public Actor add(String name, String phone, String altPhone, String email, String address) throws Exception {
+  
+  
+  // Simple add:
+  public Technician add(String name, int level) throws Exception {
     Connection cx = db.connect();
     String sql;
 
-    sql = String.format("insert into `%s` (`name`) values (?) ('phone') vlaues (?)"
-            + "('altPhone') values (?) ('email') values (?) ('address') values (?)     ", table);
+    sql = String.format("insert into `%s` (`name`, `level`) values (?,?)", table);
     PreparedStatement st = cx.prepareStatement(sql);
     st.setString(1, name);
+    st.setInt(2, level);
     st.executeUpdate();
 
-    
-   
     
     sql = String.format("select max(`id`) from `%s`",table);
     Statement st1 = cx.createStatement();
     ResultSet rs = st1.executeQuery(sql);
     rs.next();
     int id = rs.getInt(1);
-    return new Actor(id,name);
+    
+    return new Technician(name, id, level);
+  }
+  
+  
+  
+  
+  
+  public Technician add(String name, String phone, String altPhone, String email, String address) throws Exception {
+    Connection cx = db.connect();
+    String sql;
+
+    sql = String.format("insert into `%s` (`name`) values (?) ('phone') vlaues (?)"
+            + "('altPhone') values (?) ('email') values (?) ('address') values (?) ", table);
+    PreparedStatement st = cx.prepareStatement(sql);
+    st.setString(1, name);
+    st.executeUpdate();
+
+    
+    
+    sql = String.format("select max(`id`) from `%s`",table);
+    Statement st1 = cx.createStatement();
+    ResultSet rs = st1.executeQuery(sql);
+    rs.next();
+    int id = rs.getInt(1);
+    int level = rs.getInt(2);
+    
+    return new Technician(name, id, level);
   }
   
   
@@ -84,7 +111,8 @@ public class Technicians implements DBTable {
   }
   
   
-  public Actor fetch(int id) throws Exception {
+  // Fetch a Technician with a given id:
+  public Technician fetch(int id) throws Exception {
     Connection cx = db.connect();
     String sql = String.format("select * from `%s` where `id`=?", table);
     //System.out.println("sql_op: " + sql_op);
@@ -98,12 +126,12 @@ public class Technicians implements DBTable {
     if (!rs.next()) {
       return null;
     }
-    return new Actor(id, rs.getString("name"));
+    return new Technician(rs.getString("name"), id, rs.getInt("level"));
   }
   
   
   // Fetchs all technicians from a given ticket.
-  public Collection<Actor>fetchAllFromMovie(int id) throws Exception {
+  public Collection<Technician>fetchAllFromTicket(int id) throws Exception {
       Connection cx = db.connect();
 
       // Testing:
@@ -113,8 +141,6 @@ public class Technicians implements DBTable {
                 + "from movie_actors join movies join actors on "
                 + "movies.id = movie_actors.movie_id and "
                 + "actors.id = movie_actors.actor_id where movies.id=?";
-     
-
     PreparedStatement st = cx.prepareStatement(sql);
     
     st.setInt(1, id);
@@ -124,11 +150,12 @@ public class Technicians implements DBTable {
     
     ResultSet rs = st.executeQuery();
 
-    Collection<Actor> coll = new LinkedHashSet<Actor>();
+    Collection<Technician> coll = new LinkedHashSet<Technician>();
     while (rs.next()) {
       int actorId = rs.getInt("id");
       String name = rs.getString("name");
-      coll.add(new Actor(actorId, name));
+      int level = rs.getInt("level");
+      coll.add(new Technician(name, actorId, level));
     }
     return coll;
   }

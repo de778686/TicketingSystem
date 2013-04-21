@@ -2,7 +2,6 @@
 
 package dataobjects;
 
-import models.*;
 
 public class TicketTechnician {  
   private int id;

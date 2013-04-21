@@ -3,20 +3,21 @@
 package ticketingsystem;
 
 
+import dataobjects.*;
 import dataobjects.TicketClients;
 import dataobjects.TicketTechnicians;
 import dataobjects.Tickets;
-import java.awt.*;
-import java.awt.event.*;
 import java.util.Collection;
+import java.awt.*;
+import java.util.List;
+import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import models.*;
-import views.*;
 
 @SuppressWarnings("CallToThreadDumpStack")
 public class TicketingSystem {
-  private TheFrame frame = new TheFrame();
+//  private TheFrame frame = new TheFrame();
   //private CheckoutDialog checkoutDialog = new CheckoutDialog(frame, true);
 //  private AddTicketDialog addTicketDialog = new AddTicketDialog(frame, true);
 //  private ModifyTicketDialog modifyTicketDialog = new ModifyTicketDialog(frame, true);
@@ -27,54 +28,54 @@ public class TicketingSystem {
 //  private AddActorToTicketDialog addActorToTicketDialog = new AddActorToTicketDialog(frame,true);
   
   
-  private Actors actors = new Actors();
-  private Tickets tickets = new Tickets();
+  private static Clients clients = new Clients();
+  private static Tickets tickets = new Tickets();
   
-  private TicketClients ticketClients = new TicketClients();
-  private TicketTechnicians ticketTechnicians = new TicketTechnicians();
+  private static TicketClients ticketClients = new TicketClients();
+  private static TicketTechnicians ticketTechnicians = new TicketTechnicians();
   
-  private DefaultListModel actorsModel = new DefaultListModel();
-  private DefaultListModel ticketsModel = new DefaultListModel();
-  //private DefaultListModel addTicketsModel = new DefaultListModel();
-  private DefaultListModel ticketActorsModel = new DefaultListModel();
+//  private DefaultListModel actorsModel = new DefaultListModel();
+//  private DefaultListModel ticketsModel = new DefaultListModel();
+//  //private DefaultListModel addTicketsModel = new DefaultListModel();
+//  private DefaultListModel ticketActorsModel = new DefaultListModel();
   
   
-  private <E> void loadListModel(DefaultListModel model, Collection<E> c) {
-    model.clear();
-    for (E elt : c) {
-      model.addElement(elt);
-    }
-  }
+//  private <E> void loadListModel(DefaultListModel model, Collection<E> c) {
+//    model.clear();
+//    for (E elt : c) {
+//      model.addElement(elt);
+//    }
+//  }
 
-  private boolean confirm(String message) {
-    int response = JOptionPane.showOptionDialog(
-      frame, message, null, JOptionPane.YES_NO_OPTION,
-      JOptionPane.WARNING_MESSAGE, null,
-      new String[]{"Yes", "No"}, "No");
-    if (response == JOptionPane.YES_OPTION) {
-      return true;
-    }
-    return false;
-  }
+//  private boolean confirm(String message) {
+//    int response = JOptionPane.showOptionDialog(
+//      frame, message, null, JOptionPane.YES_NO_OPTION,
+//      JOptionPane.WARNING_MESSAGE, null,
+//      new String[]{"Yes", "No"}, "No");
+//    if (response == JOptionPane.YES_OPTION) {
+//      return true;
+//    }
+//    return false;
+//  }
   
   
-  // Function to refresh lists:
-    private void refreshLists() {
-        try {
-      loadListModel(actorsModel, actors.fetchAll());
-      loadListModel(ticketsModel, tickets.fetchAll());
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      System.exit(0);
-    }
-        
-    }
+//  // Function to refresh lists:
+//    private void refreshLists() {
+//        try {
+//      loadListModel(actorsModel, actors.fetchAll());
+//      loadListModel(ticketsModel, tickets.fetchAll());
+//    } catch (Exception ex) {
+//      ex.printStackTrace();
+//      System.exit(0);
+//    }
+//        
+//    }
     
     
-    private boolean isActorSelected(){
-        return (frame.getSelectedActor() != null);
-    }
-    
+//    private boolean isActorSelected(){
+//        return (frame.getSelectedActor() != null);
+//    }
+//    
 //    private boolean isTicketSelected(){
 //        return (frame.getSelectedTicket() != null);
 //    }
@@ -86,8 +87,8 @@ public class TicketingSystem {
   public TicketingSystem() {
     System.out.println("model used: " + DB.getModel());
     
-    frame.setBounds(30, 30, 900, 600);
-    frame.setTitle("TicketsDB");
+//    frame.setBounds(30, 30, 900, 600);
+//    frame.setTitle("TicketsDB");
     //checkoutDialog.setTitle("Available Books");
 //    addTicketDialog.setTitle("Add a Ticket");
 //    modifyTicketDialog.setTitle("Modify Ticket Description");
@@ -116,44 +117,44 @@ public class TicketingSystem {
 //      System.exit(0);
 //    }
 
-    frame.setVisible(true);
+//    frame.setVisible(true);
 
     
-    frame.addActorsListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent evt) {
-        if (evt.getValueIsAdjusting()) {
-          return;
-        }
-        Actor actor = frame.getSelectedActor();
-        if (actor != null) {
-          frame.setInfoText(
-            "Actor Info:\n"
-            + "name:  " + actor.getName() + ", id: " + actor.getId());
-          
-          frame.setRemoveActorEnabled(true);
-          
-//          if (isTicketSelected()){
-//              frame.setAddActorToTicketEnabled(true);
-//              frame.setRemoveActorFromTicketEnabled(true);
-//          }
-          
-        } else {
-          frame.setInfoText("");
-        }
-        frame.repaint();  // make the cell renderer kick in
-      }
-    });
+//    frame.addActorsListSelectionListener(new ListSelectionListener() {
+//      @Override
+//      public void valueChanged(ListSelectionEvent evt) {
+//        if (evt.getValueIsAdjusting()) {
+//          return;
+//        }
+//        Actor actor = frame.getSelectedActor();
+//        if (actor != null) {
+//          frame.setInfoText(
+//            "Actor Info:\n"
+//            + "name:  " + actor.getName() + ", id: " + actor.getId());
+//          
+//          frame.setRemoveActorEnabled(true);
+//          
+////          if (isTicketSelected()){
+////              frame.setAddActorToTicketEnabled(true);
+////              frame.setRemoveActorFromTicketEnabled(true);
+////          }
+//          
+//        } else {
+//          frame.setInfoText("");
+//        }
+//        frame.repaint();  // make the cell renderer kick in
+//      }
+//    });
+//    
     
     
-    
-    frame.addDeselectActorsActionListener(new ActionListener() {
-        
-      @Override
-      public void actionPerformed(ActionEvent evt) {
-        frame.clearActorSelection();
-      }
-    });
+//    frame.addDeselectActorsActionListener(new ActionListener() {
+//        
+//      @Override
+//      public void actionPerformed(ActionEvent evt) {
+//        frame.clearActorSelection();
+//      }
+//    });
         
         
         
@@ -630,5 +631,26 @@ public class TicketingSystem {
   public static void main(String[] args) throws Exception {
     //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     new TicketingSystem();
-  }
+    
+    
+    System.out.println("====== Welcome to the Ticketing System ===== \n\n");
+    
+      System.out.println("Clients: ");
+      // Not the best way
+      for (int i = 0; i < clients.fetchAll().size(); i++) {
+          System.out.println(clients.fetchAll().toArray()[i]);
+      }
+      
+      
+      System.out.println("\n\nTickets: ");
+      // Not the best way
+      for (int i = 0; i < tickets.fetchAll().size(); i++) {
+          System.out.println(tickets.fetchAll().toArray()[i]);
+      }
+      
+      
+      System.out.println("\n\nThe Technician for ticket no1 is " + tickets.fetchTechnician(1).getName());
+      System.out.println("\n\nThe Technician for ticket no2 is " + tickets.fetchTechnician(2).getName());
+      
+  } // End of main
 }

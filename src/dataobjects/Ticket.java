@@ -23,6 +23,11 @@ public class Ticket {
     private Date dateModified;          //date of last modification to the ticket
     private List<Entry> entries;        //list of entries associated with the ticket
     
+    // String alternatives: 
+    private String creatorName;
+    private String clientName;
+    private String statusName;
+    private String dateCreatedString;
     
     //========================  Constructors  =========================//
 
@@ -45,6 +50,23 @@ public class Ticket {
         this.dateModified = null;
         this.entries = new ArrayList<>();
     }
+    
+    
+    
+    
+    // This constructor creats Ticket with just strings.  
+    public Ticket(int ID, String status, String aCreator, String aClient, String dateCreated) {
+        this.ID = ID;
+        this.statusName = status;
+        this.creatorName = aCreator;
+        this.clientName = aClient;
+        this.dateCreatedString = dateCreated;
+        this.dateModified = null;
+    }
+    
+    
+    
+    
 
     /**
      * This constructor creates a new Ticket object with fields initialized

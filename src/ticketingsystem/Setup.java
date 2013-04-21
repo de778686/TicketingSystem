@@ -2,7 +2,9 @@
 
 package ticketingsystem;
 
+import java.sql.*;
 import java.util.*;
+
 //import models.*;
 import dataobjects.*;
 
@@ -30,11 +32,12 @@ public class Setup {
       Tickets tickets = new Tickets();
       Clients clients = new Clients();
       Technicians technicians = new Technicians();
-      TicketClients ticketclinets = new TicketClients();
-      TicketTechnicians tickettechnicians = new TicketTechnicians();
+      TicketClients ticket_clients = new TicketClients();
+      TicketTechnicians ticket_technicians = new TicketTechnicians();
       
 
-      for (DBTable table : new DBTable[]{ tickets, clients, technicians, ticketclinets, tickettechnicians }) {
+      // Loop which creates tables:
+      for (DBTable table : new DBTable[]{ tickets, clients, technicians, ticket_clients, ticket_technicians }) {
         String table_name = table.getTableName();
         System.out.println();
 
@@ -54,8 +57,32 @@ public class Setup {
         return;
       }
 
-      System.out.println("\n===> populate " + tickets.getTableName());
+      System.out.println("\n===> populate " + clients.getTableName());
+      
+      // Generated test data:
+      // public Client add(String name, String phone, String altPhone, String email, String address)
+      
+      clients.add("Fred", "6104568795", "74125893", "fred@bob.com", "243 g koewr rd");
+      clients.add("Corbin", "645458446", "5454512121", "scrum@agile.com", "458 MacBook rd");
+      clients.add("Steve", "6454sreg58446", "5454shs512121", "scrum@agilhe.com", "458 MahcBook rd");
+      
+      
+      tickets.add(001, "open", "Bob", "ABC Broadcasting", "Today");
+      tickets.add(002, "closed", "Steve", "Philmont Acadamey", "8/7/13");
+      tickets.add(003, "open", "Steve", "Philmont Acadamey", "8/7/13");
+      
+      technicians.add("Gary", 4);
+      technicians.add("Peter", 3);
+      
+      // Add a technician to a ticket
+      ticket_technicians.add(1,1);
+      ticket_technicians.add(2,1);
+      ticket_technicians.add(3,1);
 
+      ticket_technicians.remove(3,1);
+      
+      
+      
       int id;
       
       // Movies are Tickets

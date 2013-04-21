@@ -15,7 +15,6 @@
 
 package dataobjects;
 
-import models.*;
 import java.sql.*;
 import java.util.*;
 
@@ -26,23 +25,29 @@ public class Clients implements DBTable {
   @Override
   public String getTableName() { return table; }
   
-  public Actor add(String name, String phone, String altPhone, String email, String address) throws Exception {
+  public Client add(String name, String phone, String altPhone, String email, String address) throws Exception {
     Connection cx = db.connect();
     String sql;
 
-    sql = String.format("insert into `%s` (`name`) values (?) ('phone') vlaues (?)"
-            + "('altPhone') values (?) ('email') values (?) ('address') values (?)     ", table);
+    sql = String.format("insert into `%s` (`name`, `phone`, `altPhone`, `email`, `address`) values (?,?,?,?,?)", table);
     PreparedStatement st = cx.prepareStatement(sql);
     st.setString(1, name);
+    st.setString(2, phone);
+    st.setString(3, altPhone);
+    st.setString(4, email);
+    st.setString(5, address);
+
+//    System.out.println(st);
+    
     st.executeUpdate();
 
-    
+    // get the maximun id from mySQL table
     sql = String.format("select max(`id`) from `%s`",table);
     Statement st1 = cx.createStatement();
     ResultSet rs = st1.executeQuery(sql);
     rs.next();
     int id = rs.getInt(1);
-    return new Actor(id,name);
+    return new Client(name, phone, altPhone, email, address, id);
   }
   
   
@@ -59,13 +64,14 @@ public class Clients implements DBTable {
 
   }
   
+  // Returns a collection of clients fetched from the clients table.
   public Collection<Client> fetchAll() throws Exception {
     Connection cx = db.connect();
     String sql = String.format("select * from `%s`", table);
     //System.out.println("sql_op: " + sql_op);
     
     // Testing:
-    System.out.println(sql);
+//    System.out.println(sql);
     
     Statement st = cx.createStatement();
 
@@ -76,19 +82,22 @@ public class Clients implements DBTable {
       int id = rs.getInt("id");
       String name = rs.getString("name");
       String phone = rs.getString("phone");
-      coll.add(new Client(name, phone, id));
+      String altPhone = rs.getString("altPhone");
+      String email = rs.getString("email");
+      String address = rs.getString("address");
+      coll.add(new Client(name, phone, altPhone, email, address, id));
     }
     return coll;
   }
   
   
-  public Actor fetch(int id) throws Exception {
+  public Client fetch(int id) throws Exception {
     Connection cx = db.connect();
     String sql = String.format("select * from `%s` where `id`=?", table);
     //System.out.println("sql_op: " + sql_op);
     
     // Testing:
-    System.out.println(sql);
+//    System.out.println(sql);
     
     PreparedStatement st = cx.prepareStatement(sql);
     st.setInt(1, id);
@@ -96,53 +105,25 @@ public class Clients implements DBTable {
     if (!rs.next()) {
       return null;
     }
-    return new Actor(id, rs.getString("name"));
+    // public Client(String name, String phone, String altPhone, String email, String address, int ID) {
+    return new Client(rs.getString("name"), rs.getString("phone"), rs.getString(""), rs.getString("name"), 
+            rs.getString("name"), id);
   }
   
-  
-  // Fetchs all actors from a given film.
-  public Collection<Actor>fetchAllFromMovie(int id) throws Exception {
-      Connection cx = db.connect();
-
-      // Testing:
-      System.out.println("parameter for fetchAllFromMovie():" + id);
-      
-     String sql = "select actors.id, name "
-                + "from movie_actors join movies join actors on "
-                + "movies.id = movie_actors.movie_id and "
-                + "actors.id = movie_actors.actor_id where movies.id=?";
-     
-
-    PreparedStatement st = cx.prepareStatement(sql);
-    
-    st.setInt(1, id);
-    
-    // Testing:
-    System.out.println(sql);
-    
-    ResultSet rs = st.executeQuery();
-
-    Collection<Actor> coll = new LinkedHashSet<Actor>();
-    while (rs.next()) {
-      int actorId = rs.getInt("id");
-      String name = rs.getString("name");
-      coll.add(new Actor(actorId, name));
-    }
-    return coll;
-  }
   
   
   
   
   
   // Fetch a client from a ticket
-  public Actor fetchFromTicket(int id) throws Exception {
+
+  public Client fetchFromTicket(int id) throws Exception {
     Connection cx = db.connect();
-    String sql = String.format("select * from `%s` where `id`=?", table);
+    String sql = String.format("select * from `%s` where `id`=?", "ticket_clients");
     //System.out.println("sql_op: " + sql_op);
     
     // Testing:
-    System.out.println(sql);
+//    System.out.println(sql);
     
     PreparedStatement st = cx.prepareStatement(sql);
     st.setInt(1, id);
@@ -150,7 +131,7 @@ public class Clients implements DBTable {
     if (!rs.next()) {
       return null;
     }
-    return new Actor(id, rs.getString("name"));
+    return new Client(rs.getString("name"), rs.getString("phone"), id);
   }
   
   

@@ -1,8 +1,9 @@
 // David Emery
 
+// Connects Tickets to Clients
+
 package dataobjects;
 
-import models.*;
 
 public class TicketClient {  
   private int id;

@@ -12,7 +12,6 @@
 
 package dataobjects;
 
-import models.*;
 import java.sql.*;
 import java.util.*;
 
@@ -42,6 +41,37 @@ public class Tickets implements DBTable {
      * @return
      * @throws Exception
      */
+  
+  
+  //  Simple version:
+  public Ticket add(int ID, String status, String creator,
+          String client, String dateCreated) throws Exception {
+    Connection cx = db.connect();
+    String sql;
+   
+    sql = String.format(
+      "insert into `%s` (`id`,`status`,`creator`, `client`, `dateCreated`, `dateModified`) values (?,?,?,?,?,?)", table);
+    PreparedStatement st = cx.prepareStatement(sql);
+    st.setInt(1, ID);
+    st.setString(2, status);
+    st.setString(3, creator);
+    st.setString(4, client);
+    st.setString(5, dateCreated);
+    st.setString(6, "");
+    
+    st.executeUpdate();
+
+    sql = String.format("select max(`id`) from `%s`",table);
+    Statement st1 = cx.createStatement();
+    ResultSet rs = st1.executeQuery(sql);
+    rs.next();
+    int id = rs.getInt(1);
+    return new Ticket(id, status.toString(), creator, client, dateCreated); // add method
+  }
+  
+  
+  
+  
     public Ticket add(int ID, Status status, Technician creator,
           Client client, java.sql.Date dateCreated, java.sql.Date dateModified, List<Entry> entries) throws Exception {
     Connection cx = db.connect();
@@ -69,7 +99,7 @@ public class Tickets implements DBTable {
   // Fetch all tickets
   public Collection<Ticket> fetchAll() throws Exception {
     Connection cx = db.connect();
-    String sql = String.format("select * from `%s` order by title", table);
+    String sql = String.format("select * from `%s`", table);
     //System.out.println("sql_op: " + sql_op);
     Statement st = cx.createStatement();
 
@@ -77,6 +107,7 @@ public class Tickets implements DBTable {
 
     Collection<Ticket> coll = new LinkedHashSet<Ticket>();
     while (rs.next()) {
+        
       int id = rs.getInt("id");
       
       String status = rs.getString("status");
@@ -89,29 +120,31 @@ public class Tickets implements DBTable {
       String clientName = rs.getString("client");
       clientColl = clients.fetchAll();
       
-      java.sql.Date dateCreated = rs.getDate("dateCreated");
-//      coll.add(new Ticket(id, status, creatorName, clientName, dateCreated));
+//      java.sql.Date dateCreated = rs.getDate("dateCreated");
+      String dateCreated = rs.getString("dateCreated");
+      coll.add(new Ticket(id, status, creatorName, clientName, dateCreated));
     }
     return coll;
   }
   
-  public void modify(Movie movie, String descr) throws Exception {
-    Connection cx = db.connect();
-    
-    int id = movie.getId();
-    int year = movie.getYear();
-    // title, year, description
-    String sql_op = String.format(
-      "update `%s` set `title`=?,`year`=?,`description`=? where `id`=?", table);
-    PreparedStatement st = cx.prepareStatement(sql_op);
-    String title = movie.getTitle();
-    
-    st.setString(1, title);
-    st.setInt(2, year);
-    st.setString(3, descr);
-    st.setInt(4, id);
-    st.executeUpdate();
-  }
+  // Modify a Ticket:  
+//  public void modify(Movie movie, String descr) throws Exception {
+//    Connection cx = db.connect();
+//    
+//    int id = movie.getId();
+//    int year = movie.getYear();
+//    // title, year, description
+//    String sql_op = String.format(
+//      "update `%s` set `title`=?,`year`=?,`description`=? where `id`=?", table);
+//    PreparedStatement st = cx.prepareStatement(sql_op);
+//    String title = movie.getTitle();
+//    
+//    st.setString(1, title);
+//    st.setInt(2, year);
+//    st.setString(3, descr);
+//    st.setInt(4, id);
+//    st.executeUpdate();
+//  }
   
   // Setting the description initially to empty
   
@@ -128,15 +161,14 @@ public class Tickets implements DBTable {
     return add(ID, status, creator, client,  dateCreated);
   }
   
-  
-  // Fetch ===============================================
-  public Movie fetch(int id) throws Exception {
+  // Fetch a Ticket ===============================================
+  public Ticket fetch(int id) throws Exception {
     Connection cx = db.connect();
     String sql = String.format("select * from `%s` where `id`=?", table);
     //System.out.println("sql_op: " + sql_op);
     
     // Testing:
-    System.out.println(sql);
+//    System.out.println(sql);
     
     PreparedStatement st = cx.prepareStatement(sql);
     st.setInt(1, id);
@@ -144,8 +176,10 @@ public class Tickets implements DBTable {
     if (!rs.next()) {
       return null;
     }
-    return new Movie(id, rs.getString("title"), rs.getInt("year"), rs.getString("description"));
+    return new Ticket(id, rs.getString("status"), rs.getString("creator"), rs.getString("client"), rs.getString("dateCreated"));
   }
+  
+  
   
   
   
@@ -157,7 +191,7 @@ public class Tickets implements DBTable {
     //System.out.println("sql_op: " + sql_op);
     
     // Testing:
-    System.out.println(sql);
+//    System.out.println(sql);
     
     PreparedStatement st = cx.prepareStatement(sql);
     st.setInt(1, id);
@@ -173,12 +207,12 @@ public class Tickets implements DBTable {
   
   
   
-  // Fetches all technicians from a given ticket.
-  public Collection<Movie>fetchAllForActor(int id) throws Exception {
+  // Fetches all tickets for a given technician.
+  public Collection<Ticket>fetchAllForTechnician(int id) throws Exception {
       Connection cx = db.connect();
  
       // Testing:
-      System.out.println("parameter for fetchAllForActor():" + id);
+//      System.out.println("parameter for fetchAllForActor():" + id);
       
      String sql = "select movies.id, title "
                 + "from movie_actors join movies join actors on "
@@ -194,13 +228,24 @@ public class Tickets implements DBTable {
     
     ResultSet rs = st.executeQuery();
 
-    Collection<Movie> coll = new LinkedHashSet<Movie>();
+    Collection<Ticket> coll = new LinkedHashSet<Ticket>();
     while (rs.next()) {
-      int movieId = rs.getInt("id");
-      String title = rs.getString("title");
-      int year = rs.getInt("year");
-      String descr = rs.getString("description");
-      coll.add(new Movie(movieId, title, year, descr));
+      int ticketID = rs.getInt("id");
+      String status = rs.getString("status");
+      String creator = rs.getString("creator");
+      String client = rs.getString("client");
+      String dateCreated = rs.getString("dateCreated");
+      
+      // This constructor creats Ticket with just strings.  
+//    public Ticket(int ID, String status, String aCreator, String aClient, Date dateCreated) {
+//        this.ID = ID;
+//        this.statusName = status;
+//        this.creatorName = aCreator;
+//        this.clientName = aClient;
+//        this.dateCreated = dateCreated;
+//    }
+      
+      coll.add(new Ticket(id, status, creator, client, dateCreated));
     }
     return coll;
   }

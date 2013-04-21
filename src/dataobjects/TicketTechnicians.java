@@ -2,7 +2,6 @@
 
 package dataobjects;
 
-import models.*;
 import java.sql.*;
 import java.util.*;
 
@@ -13,7 +12,8 @@ public class TicketTechnicians implements DBTable {
   @Override
   public String getTableName() { return table; }
   
-  public TicketTechnician add(int ticket_id, int technician_id) throws Exception {
+  // add a technician to a ticket:
+  public TicketTechnician add(int technician_id, int ticket_id) throws Exception {
     Connection cx = db.connect();
     String sql;
 
@@ -32,9 +32,7 @@ public class TicketTechnicians implements DBTable {
     return new TicketTechnician(id,ticket_id,technician_id);
   }
   
-  
-  
-  
+  // Remove a Technician from a Ticket
   public void remove(int technicianId, int ticketId) throws Exception {
     Connection cx = db.connect();
     String sql;
