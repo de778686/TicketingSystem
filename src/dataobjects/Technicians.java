@@ -49,14 +49,11 @@ public class Technicians implements DBTable {
   }
   
   
-  
-  
-  
   public Technician add(String name, String phone, String altPhone, String email, String address) throws Exception {
     Connection cx = db.connect();
     String sql;
 
-    sql = String.format("insert into `%s` (`name`) values (?) ('phone') vlaues (?)"
+    sql = String.format("insert into `%s` (`name`) values (?) ('phone') values (?)"
             + "('altPhone') values (?) ('email') values (?) ('address') values (?) ", table);
     PreparedStatement st = cx.prepareStatement(sql);
     st.setString(1, name);

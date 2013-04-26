@@ -16,6 +16,7 @@ public class Ticket {
     //=====================  Instance Variables  ======================//
     private int ID;                     //id of ticket used for associations
                                         //in the database
+    private String title;               //title (subject) of the ticket
     private Status status;              //status of the ticket (ie open, close, etc.)
     private Technician creator;         //technician that created the ticket
     private Client client;              //client of the ticket (ie customer, employee)
@@ -41,8 +42,9 @@ public class Ticket {
      * @param client 
      * @param dateCreated
      */
-    public Ticket(int ID, Status status, Technician creator, Client client, Date dateCreated) {
+    public Ticket(int ID, String title, Status status, Technician creator, Client client, Date dateCreated) {
         this.ID = ID;
+        this.title = title;
         this.status = status;
         this.creator = creator;
         this.client = client;
@@ -55,8 +57,9 @@ public class Ticket {
     
     
     // This constructor creats Ticket with just strings.  
-    public Ticket(int ID, String status, String aCreator, String aClient, String dateCreated) {
+    public Ticket(int ID, String title, String status, String aCreator, String aClient, String dateCreated) {
         this.ID = ID;
+        this.title = title;
         this.statusName = status;
         this.creatorName = aCreator;
         this.clientName = aClient;
@@ -79,9 +82,10 @@ public class Ticket {
      * @param dateModified
      * @param entries 
      */
-    public Ticket(int ID, Status status, Technician creator, Client client, 
+    public Ticket(int ID, String title, Status status, Technician creator, Client client, 
             Date dateCreated, Date dateModified, List<Entry> entries) {
         this.ID = ID;
+        this.title = title;
         this.status = status;
         this.creator = creator;
         this.client = client;
@@ -99,6 +103,14 @@ public class Ticket {
      */
     public int getID() {
         return ID;
+    }
+
+    /**
+     * return title (subject) of the ticket
+     * @return 
+     */
+    public String getTitle() {
+        return title;
     }
 
     /**
@@ -202,6 +214,7 @@ public class Ticket {
     public int hashCode() {
         int hash = 5;
         hash = 23 * hash + this.ID;
+        hash = 23 * hash + (this.title != null ? this.title.hashCode() : 0);
         hash = 23 * hash + (this.status != null ? this.status.hashCode() : 0);
         hash = 23 * hash + Objects.hashCode(this.creator);
         hash = 23 * hash + Objects.hashCode(this.client);
@@ -228,7 +241,7 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket{" + "ID=" + ID + ", status=" + status 
+        return "Ticket{" + "ID=" + ID +", title=" + title + ", status=" + status 
                 + ", creator=" + creator + ", client=" + client 
                 + ", dateCreated=" + dateCreated + ", dateModified=" 
                 + dateModified + ", entries=" + entries + '}';

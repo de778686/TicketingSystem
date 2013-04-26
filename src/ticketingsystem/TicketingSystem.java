@@ -5,6 +5,8 @@ package ticketingsystem;
 
 import dataobjects.*;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import utils.CFormat;
 import static utils.SelectOption.*;
 
 @SuppressWarnings("CallToThreadDumpStack")
@@ -139,11 +141,36 @@ public class TicketingSystem implements Runnable{
                       quit = true;
                   }
                   break;
-          }
+          }//end switch
 
-        }
+        }//end if standard user
 
     } while(!quit);
     
+  }
+  
+  /**
+   * viewTicketsMenu displays the menu for viewing and selecting tickets
+   * for the current user
+   * @pre currentUser is not null (there is an authenticated user)
+   */
+  public void viewTicketsMenu(){
+      
+      //get list of all the tickets for the current user
+      Collection<Ticket> ticketSet = null;
+      try{
+        ticketSet = tickets.fetchAllForTechnician(currentUser.getID());
+      }catch(Exception e){
+        ticketSet = new LinkedHashSet<>();
+      }
+      
+      //print header
+      System.out.println(CFormat.head("Tickets"));
+      
+      //print tickets formatted by id
+      for(Ticket t : ticketSet){
+          System.out.println(CFormat.item(t.getID() + " - " + t.getTitle(), 1));
+      }
+      
   }
 }

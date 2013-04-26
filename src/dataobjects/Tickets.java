@@ -32,6 +32,7 @@ public class Tickets implements DBTable {
     /**
      *
      * @param ID
+     * @param title
      * @param status
      * @param creator
      * @param client
@@ -44,20 +45,21 @@ public class Tickets implements DBTable {
   
   
   //  Simple version:
-  public Ticket add(int ID, String status, String creator,
+  public Ticket add(int ID,String title, String status, String creator,
           String client, String dateCreated) throws Exception {
     Connection cx = db.connect();
     String sql;
    
     sql = String.format(
-      "insert into `%s` (`id`,`status`,`creator`, `client`, `dateCreated`, `dateModified`) values (?,?,?,?,?,?)", table);
+      "insert into `%s` (`id`, `title`,`status`,`creator`, `client`, `dateCreated`, `dateModified`) values (?,?,?,?,?,?,?)", table);
     PreparedStatement st = cx.prepareStatement(sql);
     st.setInt(1, ID);
-    st.setString(2, status);
-    st.setString(3, creator);
-    st.setString(4, client);
-    st.setString(5, dateCreated);
-    st.setString(6, "");
+    st.setString(2,title);
+    st.setString(3, status);
+    st.setString(4, creator);
+    st.setString(5, client);
+    st.setString(6, dateCreated);
+    st.setString(7, "");
     
     st.executeUpdate();
 
@@ -66,13 +68,13 @@ public class Tickets implements DBTable {
     ResultSet rs = st1.executeQuery(sql);
     rs.next();
     int id = rs.getInt(1);
-    return new Ticket(id, status.toString(), creator, client, dateCreated); // add method
+    return new Ticket(id, title, status.toString(), creator, client, dateCreated); // add method
   }
   
   
   
   
-    public Ticket add(int ID, Status status, Technician creator,
+    public Ticket add(int ID, String title,Status status, Technician creator,
           Client client, java.sql.Date dateCreated, java.sql.Date dateModified, List<Entry> entries) throws Exception {
     Connection cx = db.connect();
     String sql;
@@ -93,7 +95,7 @@ public class Tickets implements DBTable {
     ResultSet rs = st1.executeQuery(sql);
     rs.next();
     int id = rs.getInt(1);
-    return new Ticket(id, status, creator, client, dateCreated); // add method
+    return new Ticket(id, title, status, creator, client, dateCreated); // add method
   }
   
   // Fetch all tickets
@@ -112,6 +114,7 @@ public class Tickets implements DBTable {
       
       String status = rs.getString("status");
       
+      String title = rs.getString("title");
       // Fetch technician name and search clients collection
       String creatorName = rs.getString("creator");
 //      Technician tech = 
@@ -122,7 +125,7 @@ public class Tickets implements DBTable {
       
 //      java.sql.Date dateCreated = rs.getDate("dateCreated");
       String dateCreated = rs.getString("dateCreated");
-      coll.add(new Ticket(id, status, creatorName, clientName, dateCreated));
+      coll.add(new Ticket(id, title, status, creatorName, clientName, dateCreated));
     }
     return coll;
   }
@@ -176,7 +179,7 @@ public class Tickets implements DBTable {
     if (!rs.next()) {
       return null;
     }
-    return new Ticket(id, rs.getString("status"), rs.getString("creator"), rs.getString("client"), rs.getString("dateCreated"));
+    return new Ticket(id,rs.getString("title"), rs.getString("status"), rs.getString("creator"), rs.getString("client"), rs.getString("dateCreated"));
   }
   
   
@@ -231,6 +234,7 @@ public class Tickets implements DBTable {
     Collection<Ticket> coll = new LinkedHashSet<Ticket>();
     while (rs.next()) {
       int ticketID = rs.getInt("id");
+      String title = rs.getString("title");
       String status = rs.getString("status");
       String creator = rs.getString("creator");
       String client = rs.getString("client");
@@ -245,7 +249,7 @@ public class Tickets implements DBTable {
 //        this.dateCreated = dateCreated;
 //    }
       
-      coll.add(new Ticket(id, status, creator, client, dateCreated));
+      coll.add(new Ticket(id,title, status, creator, client, dateCreated));
     }
     return coll;
   }

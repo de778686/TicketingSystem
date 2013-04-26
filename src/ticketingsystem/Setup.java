@@ -67,9 +67,9 @@ public class Setup {
       clients.add("Steve", "6454sreg58446", "5454shs512121", "scrum@agilhe.com", "458 MahcBook rd");
       
       
-      tickets.add(001, "open", "Bob", "ABC Broadcasting", "Today");
-      tickets.add(002, "closed", "Steve", "Philmont Acadamey", "8/7/13");
-      tickets.add(003, "open", "Steve", "Philmont Acadamey", "8/7/13");
+      tickets.add(001, "title1","open", "Bob", "ABC Broadcasting", "Today");
+      tickets.add(002, "title2","closed", "Steve", "Philmont Acadamey", "8/7/13");
+      tickets.add(003, "title3","open", "Steve", "Philmont Acadamey", "8/7/13");
       
       technicians.add("Gary", 4);
       technicians.add("Peter", 3);
