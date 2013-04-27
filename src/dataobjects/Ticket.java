@@ -56,7 +56,7 @@ public class Ticket {
     
     
     
-    // This constructor creats Ticket with just strings.  
+    // This constructor creates Ticket with just strings.  
     public Ticket(int ID, String title, String status, String aCreator, String aClient, String dateCreated) {
         this.ID = ID;
         this.title = title;
@@ -240,10 +240,11 @@ public class Ticket {
     }
 
     @Override
+    // DavidE edited this to work with the strings: 042613
     public String toString() {
-        return "Ticket{" + "ID=" + ID +", title=" + title + ", status=" + status 
-                + ", creator=" + creator + ", client=" + client 
-                + ", dateCreated=" + dateCreated + ", dateModified=" 
+        return "Ticket{" + "ID=" + ID +", title=" + title + ", status=" + statusName 
+                + ", creator=" + creatorName + ", client=" + clientName 
+                + ", dateCreated=" + dateCreatedString + ", dateModified=" 
                 + dateModified + ", entries=" + entries + '}';
     }
     

@@ -8,7 +8,6 @@
 //    private Date dateModified;          //date of last modification to the ticket
 //    private List<Entry> entries;        //list of entries associated with the ticket
 
-// tickets are like movies
 
 package dataobjects;
 
@@ -117,49 +116,16 @@ public class Tickets implements DBTable {
       String title = rs.getString("title");
       // Fetch technician name and search clients collection
       String creatorName = rs.getString("creator");
-//      Technician tech = 
       
-      // Fetch client name and search collection
       String clientName = rs.getString("client");
-      clientColl = clients.fetchAll();
       
-//      java.sql.Date dateCreated = rs.getDate("dateCreated");
       String dateCreated = rs.getString("dateCreated");
       coll.add(new Ticket(id, title, status, creatorName, clientName, dateCreated));
     }
     return coll;
   }
   
-  // Modify a Ticket:  
-//  public void modify(Movie movie, String descr) throws Exception {
-//    Connection cx = db.connect();
-//    
-//    int id = movie.getId();
-//    int year = movie.getYear();
-//    // title, year, description
-//    String sql_op = String.format(
-//      "update `%s` set `title`=?,`year`=?,`description`=? where `id`=?", table);
-//    PreparedStatement st = cx.prepareStatement(sql_op);
-//    String title = movie.getTitle();
-//    
-//    st.setString(1, title);
-//    st.setInt(2, year);
-//    st.setString(3, descr);
-//    st.setInt(4, id);
-//    st.executeUpdate();
-//  }
   
-  // Setting the description initially to empty
-  
-//  public Ticket(int ID, Status status, Technician creator, Client client, Date dateCreated) {
-//        this.ID = ID;
-//        this.status = status;
-//        this.creator = creator;
-//        this.client = client;
-//        this.dateCreated = dateCreated;
-//        this.dateModified = null;
-//        this.entries = new ArrayList<>();
-//    }
   public Ticket add(int ID, String status, Technician creator, Client client, java.sql.Date dateCreated) throws Exception {
     return add(ID, status, creator, client,  dateCreated);
   }
@@ -211,23 +177,24 @@ public class Tickets implements DBTable {
   
   
   // Fetches all tickets for a given technician.
+  // Takes technicians id as a parameter
   public Collection<Ticket>fetchAllForTechnician(int id) throws Exception {
       Connection cx = db.connect();
  
       // Testing:
-//      System.out.println("parameter for fetchAllForActor():" + id);
+//      System.out.println("parameter for fetchAllFortechnician():" + id);
       
-     String sql = "select movies.id, title "
-                + "from movie_actors join movies join actors on "
-                + "movies.id = movie_actors.movie_id and "
-                + "actors.id = movie_actors.actor_id where actors.id=?";
+     String sql = "select * "
+                + "from ticket_technicians join tickets join technicians on "
+                + "tickets.id = ticket_technicians.ticket_id and "
+                + "technicians.id = ticket_technicians.technician_id where technicians.id=?";
      
     PreparedStatement st = cx.prepareStatement(sql);
     
     st.setInt(1, id);
     
     // Testing:
-    System.out.println(sql);
+//    System.out.println(sql);
     
     ResultSet rs = st.executeQuery();
 
@@ -240,16 +207,8 @@ public class Tickets implements DBTable {
       String client = rs.getString("client");
       String dateCreated = rs.getString("dateCreated");
       
-      // This constructor creats Ticket with just strings.  
-//    public Ticket(int ID, String status, String aCreator, String aClient, Date dateCreated) {
-//        this.ID = ID;
-//        this.statusName = status;
-//        this.creatorName = aCreator;
-//        this.clientName = aClient;
-//        this.dateCreated = dateCreated;
-//    }
-      
-      coll.add(new Ticket(id,title, status, creator, client, dateCreated));
+ 
+      coll.add(new Ticket(ticketID, title, status, creator, client, dateCreated));
     }
     return coll;
   }

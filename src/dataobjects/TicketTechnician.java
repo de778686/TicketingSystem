@@ -8,17 +8,17 @@ public class TicketTechnician {
   private int ticket_id;
   private int technician_id;
   
-  public TicketTechnician(int id, int ticket_id, int actor_id) {
+  public TicketTechnician(int id, int ticket_id, int technican_id) {
     this.id = id;
     this.ticket_id = ticket_id;
-    this.technician_id = actor_id;
+    this.technician_id = technican_id;
   }
   
   public int getId() { return id; }
   public int getTechnicianId() { return technician_id; }
   public int getTicketId() { return ticket_id; }
   
-  public void setTechnicianId(int actor_id) { this.technician_id = actor_id; }
+  public void setTechnicianId(int technican_id) { this.technician_id = technican_id; }
   public void setTicketId(int ticket_id) { this.ticket_id = ticket_id; }
   
   /* We should never need equals and hashCode for these objects

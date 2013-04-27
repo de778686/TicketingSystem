@@ -1,6 +1,5 @@
 package ticketingsystem;
 
-
 import dataobjects.*;
 import java.util.Collection;
 import utils.CFormat;
@@ -41,85 +40,81 @@ public class TicketingSystem implements Runnable{
         //kick off a new TicketingSystem thread
         Thread t = new Thread(new TicketingSystem());
         t.start();
-    
-  }
-    
-      
+
+    }
 
     /**
      * run() begins program execution
      */
     @Override
     public void run() {
-        
+
         System.out.println("====== Welcome to the Ticketing System ===== \n\n");
-    
+
         System.out.println("Clients: ");
-        
+
         //Print client info
         Collection<Client> clientSet = null;
-        try{
+        try {
             clientSet = clients.fetchAll();
-        }catch(Exception e1){
+        } catch (Exception e1) {
             e1.printStackTrace();
             System.exit(0);
             //TODO edit error handling
-        for(Client c : clientSet){
+        }
+        for (Client c : clientSet) {
             System.out.println(c);
         }
-      
-      
+
         System.out.println("\n\nTickets: ");
-        
+
         //Print ticket info
         Collection<Ticket> ticketSet = null;
-        try{
+        try {
             ticketSet = tickets.fetchAll();
-        } catch(Exception e2){
+        } catch (Exception e2) {
             e2.printStackTrace();
             System.exit(0);
             //TODO edit error handling
         }
-        for(Ticket t : ticketSet){
+        for (Ticket t : ticketSet) {
             System.out.println(t);
         }
-      
-        try{
-        System.out.println("\n\nThe Technician for ticket no1 is " + tickets.fetchTechnician(1).getName());
-        System.out.println("\n\nThe Technician for ticket no2 is " + tickets.fetchTechnician(2).getName());
-        }catch(Exception e3){
+
+        try {
+            System.out.println("\n\nThe Technician for ticket no1 is " + tickets.fetchTechnician(1).getName());
+            System.out.println("\n\nThe Technician for ticket no2 is " + tickets.fetchTechnician(2).getName());
+        } catch (Exception e3) {
             e3.printStackTrace();
             System.exit(0);
             //TODO edit error handling
         }
-        
-    }
-      
-  } // End of main
-    
-  /**
-   * Display the main menu for the TicketingSystem.  Output will
-   * depend on whether the authenticated user is a standard user or an
-   * administrator
-   * @pre currentUser is not null (there is an authenticated user)
-   */
-  public void mainMenu(){
-    
-    //=====================  Local Data  ======================//
-    char response;  //used to store user option selection
-    boolean quit = false;   //whether main menu should be quit or not
-    String prompt = "Please select one of the following options.";
-    
-    
-    //menu wrapped in do-while so there is an opportunity to confirm
-    //quitting the application
-    do{
-    
-        //if user is a standard user, display the standard menu
-        if(currentUser.getLevel() == STANDARD){
-    
-            String[] standardOpts =  //standard menu options
-                  {
+
+    } // End of main
+
+    /**
+     * Display the main menu for the TicketingSystem.  Output will
+     * depend on whether the authenticated user is a standard user or an
+     * administrator
+     * @pre currentUser is not null (there is an authenticated user)
+     */
+    public void mainMenu() {
+
+        //=====================  Local Data  ======================//
+        char response;  //used to store user option selection
+        boolean quit = false;   //whether main menu should be quit or not
+        String prompt = "Please select one of the following options.";
+
+
+        //menu wrapped in do-while so there is an opportunity to confirm
+        //quitting the application
+        do {
+
+            //if user is a standard user, display the standard menu
+            if (currentUser.getLevel() == STANDARD) {
+
+                String[] standardOpts = //standard menu options
+                        {
                     "1 - View assigned tickets",
                     "2 - Add a ticket",
                     "3 - Quit"

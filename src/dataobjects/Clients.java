@@ -11,7 +11,6 @@
 //    private String address;         //address of client
 //    private int ID;   
 
-// clients are like Actors
 
 package dataobjects;
 
