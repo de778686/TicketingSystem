@@ -11,7 +11,6 @@
 //    private String address;         //address of client
 //    private int ID;   
 
-// clients are like Actors
 
 package dataobjects;
 
@@ -91,7 +90,7 @@ public class Technicians implements DBTable {
     //System.out.println("sql_op: " + sql_op);
     
     // Testing:
-    System.out.println(sql);
+//    System.out.println(sql);
     
     Statement st = cx.createStatement();
 
@@ -132,12 +131,12 @@ public class Technicians implements DBTable {
       Connection cx = db.connect();
 
       // Testing:
-      System.out.println("parameter for fetchAllFromMovie():" + id);
+//      System.out.println("parameter for fetchAllFromTicket():" + id);
       
-     String sql = "select actors.id, name "
-                + "from movie_actors join movies join actors on "
-                + "movies.id = movie_actors.movie_id and "
-                + "actors.id = movie_actors.actor_id where movies.id=?";
+     String sql = "select technician.id, name "
+                + "from ticket_technicians join tickets join technicians on "
+                + "tickets.id = ticket_technicians.ticket_id and "
+                + "technicians.id = ticket_technicians.technician_id where tickets.id=?";
     PreparedStatement st = cx.prepareStatement(sql);
     
     st.setInt(1, id);
@@ -149,10 +148,10 @@ public class Technicians implements DBTable {
 
     Collection<Technician> coll = new LinkedHashSet<Technician>();
     while (rs.next()) {
-      int actorId = rs.getInt("id");
+      int technicianId = rs.getInt("id");
       String name = rs.getString("name");
       int level = rs.getInt("level");
-      coll.add(new Technician(name, actorId, level));
+      coll.add(new Technician(name, technicianId, level));
     }
     return coll;
   }

@@ -10,17 +10,17 @@ public class TicketClient {
   private int ticket_id;
   private int client_id;
   
-  public TicketClient(int id, int ticket_id, int actor_id) {
+  public TicketClient(int id, int ticket_id, int client_id) {
     this.id = id;
     this.ticket_id = ticket_id;
-    this.client_id = actor_id;
+    this.client_id = client_id;
   }
   
   public int getId() { return id; }
   public int getClientId() { return client_id; }
   public int getTicketId() { return ticket_id; }
   
-  public void setClientId(int actor_id) { this.client_id = actor_id; }
+  public void setClientId(int client_id) { this.client_id = client_id; }
   public void setTicketId(int ticket_id) { this.ticket_id = ticket_id; }
   
   /* We should never need equals and hashCode for these objects

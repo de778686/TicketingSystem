@@ -12,7 +12,7 @@ public class TicketTechnicians implements DBTable {
   @Override
   public String getTableName() { return table; }
   
-  // add a technician to a ticket:
+  // Add a technician to a ticket:
   public TicketTechnician add(int technician_id, int ticket_id) throws Exception {
     Connection cx = db.connect();
     String sql;
@@ -43,8 +43,5 @@ public class TicketTechnicians implements DBTable {
     st.setInt(2, ticketId);
     st.executeUpdate();
   }
-  
-  
-  
   
 }
