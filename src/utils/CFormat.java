@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class CFormat {
     
+    //========================  Constants  =========================//
     public static final String INDENT = "   ";
     public static final String ASTERISK_DIVIDER = 
             "***************************************************";
@@ -23,6 +24,12 @@ public class CFormat {
             "-----------------------------------------";
     public static final String NL = System.lineSeparator();
 
+    /**
+     * indent creates a string with whitespace characters for
+     * the number of indents specified in the parameter
+     * @param indent number of indents to include in returned string
+     * @return string of concatenated whitespace indent characters
+     */
     public static String indent(int indent){
         
         StringBuilder ind = new StringBuilder();
@@ -52,6 +59,13 @@ public class CFormat {
         
     }
     
+    /**
+     * getLines takes a string and splits it into lines of the maximum
+     * length specified
+     * @param lineLength maximum number of characters to put on a line
+     * @param message message to split into lines
+     * @return 
+     */
     private static String[] getLines(int lineLength, String message){
 
         //=====================  Local Data  ======================//
@@ -79,6 +93,12 @@ public class CFormat {
         return lines;
     }
     
+    /**
+     * titleBoxLine formats a string of text as a line in a titleBox
+     * @param line
+     * @param lineLength
+     * @return 
+     */
     private static String titleBoxLine(String line, int lineLength){
         
             StringBuilder formattedLine = new StringBuilder("*");

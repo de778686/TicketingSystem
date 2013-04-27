@@ -1,14 +1,20 @@
-// David Emery 
-
 package ticketingsystem;
 
 
 import dataobjects.*;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import utils.CFormat;
 import static utils.SelectOption.*;
 
+/**
+ * Ticketing System is the main class for the TicketingSystem application
+ * @author CQD2 Software
+ * Contributors:
+ *      David Emery
+ *      Quinn Detweiler
+ *      David Grant
+ *      Corbin Hall
+ */
 @SuppressWarnings("CallToThreadDumpStack")
 public class TicketingSystem implements Runnable{
 
@@ -24,6 +30,12 @@ public class TicketingSystem implements Runnable{
   private TicketTechnicians ticketTechnicians = new TicketTechnicians();    //ticketTechnicians database table access
   
 
+  /**
+   * Main method for the TicketingSystem application which starts a new
+   * thread and runs the application
+   * @param args
+   * @throws Exception 
+   */
   public static void main(String[] args) throws Exception {
 
         //kick off a new TicketingSystem thread
@@ -156,20 +168,36 @@ public class TicketingSystem implements Runnable{
    */
   public void viewTicketsMenu(){
       
-      //get list of all the tickets for the current user
+      //if logged in user is a standard user, get a list of all tickets
+      //assigned to him/her
       Collection<Ticket> ticketSet = null;
       try{
-        ticketSet = tickets.fetchAllForTechnician(currentUser.getID());
+        if(currentUser.getLevel() == STANDARD){
+            ticketSet = tickets.fetchAllForTechnician(currentUser.getID());
+        } else {
+            //TODO implement for admin in UI-G/19
+        }
       }catch(Exception e){
-        ticketSet = new LinkedHashSet<>();
+          
+          //if there is an error fetching from the database
+          //print an error message to the console and then return
+          //to previous procedure (previous menu)
+          System.out.println("Error connecting to database.  Please try again");
+          return;
       }
       
       //print header
-      System.out.println(CFormat.head("Tickets"));
+      System.out.println(CFormat.head("Assigned Tickets"));
       
-      //print tickets formatted by id
-      for(Ticket t : ticketSet){
-          System.out.println(CFormat.item(t.getID() + " - " + t.getTitle(), 1));
+      //if there are tickets for the user, print tickets formatted by id
+      if(!ticketSet.isEmpty()){
+        for(Ticket t : ticketSet){
+            System.out.println(CFormat.item(t.getID() + " - " + t.getTitle(), 1));
+        }
+        
+      //if there are not tickets for the user, print out message
+      } else {
+          System.out.println("You have no assigned tickets!");
       }
       
   }

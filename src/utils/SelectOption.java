@@ -63,12 +63,12 @@ public class SelectOption {
      * options and ensures that they choose a valid option.
      * @param prompt - string to use for prompt
      * @param opts - array of string options
-     * @param defaultOption - array index of the option that should be default
+     * @param defaultOption - character that represents the default option
      * @pre the first letter of each option string is unique
+     * @pre the defaultOption character is the first character of one of the options
      * @post the response character is in upper case
      * 
-     * @return - string of matching option if matching entire string, otherwise
-     *           first character of matching option (to upper case)
+     * @return - first character of matching option (to upper case)
      */
     public static char variableOption(String prompt, String[] opts,
             char defaultOption){
