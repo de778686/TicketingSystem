@@ -2,6 +2,8 @@ package ticketingsystem;
 
 import dataobjects.*;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.CFormat;
 import static utils.SelectOption.*;
 
@@ -23,9 +25,9 @@ public class TicketingSystem implements Runnable{
   
   //=====================  Instance Variables  ======================//
   private Technician currentUser = null;  //authenticated user, null if not authenticated
-  private Clients clients = new Clients();  //clients database table access
+  
   private Tickets tickets = new Tickets();  //tickets database table access
-  private TicketClients ticketClients = new TicketClients();    //ticket_clients database table access
+  private Technicians technicians = new Technicians();
   private TicketTechnicians ticketTechnicians = new TicketTechnicians();    //ticketTechnicians database table access
   
 
@@ -51,19 +53,19 @@ public class TicketingSystem implements Runnable{
 
         System.out.println("====== Welcome to the Ticketing System ===== \n\n");
 
-        System.out.println("Clients: ");
+        System.out.println("Technicians: ");
 
         //Print client info
-        Collection<Client> clientSet = null;
+        Collection<Technician> technicianSet = null;
         try {
-            clientSet = clients.fetchAll();
+            technicianSet = technicians.fetchAll();
         } catch (Exception e1) {
             e1.printStackTrace();
             System.exit(0);
             //TODO edit error handling
         }
-        for (Client c : clientSet) {
-            System.out.println(c);
+        for (Technician t : technicianSet) {
+            System.out.println(t);
         }
 
         System.out.println("\n\nTickets: ");
@@ -89,6 +91,15 @@ public class TicketingSystem implements Runnable{
             System.exit(0);
             //TODO edit error handling
         }
+        
+        //for testing only!!
+        try {
+            currentUser = technicians.fetch(1);
+        } catch (Exception ex) {
+            Logger.getLogger(TicketingSystem.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+        mainMenu();
 
     } // End of main
 
@@ -126,8 +137,7 @@ public class TicketingSystem implements Runnable{
               //view assigned tickets
               case '1':
 
-                  //TODO implement
-
+                  viewTicketsMenu();
                   break;
 
 
@@ -187,8 +197,9 @@ public class TicketingSystem implements Runnable{
       //if there are tickets for the user, print tickets formatted by id
       if(!ticketSet.isEmpty()){
         for(Ticket t : ticketSet){
-            System.out.println(CFormat.item(t.getID() + " - " + t.getTitle(), 1));
+            System.out.print(CFormat.item(t.getID() + ": " + t.getTitle(), 1));
         }
+        System.out.println(""); //for formatting purposes
         
       //if there are not tickets for the user, print out message
       } else {

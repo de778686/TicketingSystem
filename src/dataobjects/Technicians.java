@@ -114,7 +114,7 @@ public class Technicians implements DBTable {
     //System.out.println("sql_op: " + sql_op);
     
     // Testing:
-    System.out.println(sql);
+    //System.out.println(sql);
     
     PreparedStatement st = cx.prepareStatement(sql);
     st.setInt(1, id);
@@ -142,7 +142,7 @@ public class Technicians implements DBTable {
     st.setInt(1, id);
     
     // Testing:
-    System.out.println(sql);
+    //System.out.println(sql);
     
     ResultSet rs = st.executeQuery();
 

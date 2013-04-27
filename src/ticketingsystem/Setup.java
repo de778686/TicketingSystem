@@ -73,9 +73,9 @@ public class Setup {
             
             
             
-            technicians.add("Gary", 4);  // 1
-            technicians.add("Peter", 3); // 2
-            technicians.add("Corbin", 3); // 2
+            technicians.add("Gary", 0);  // 1
+            technicians.add("Peter", 0); // 2
+            technicians.add("Corbin", 1); // 2
             
             System.out.println("\n\nOur Technicians are: ");
             for (Technician t : technicians.fetchAll()) {
