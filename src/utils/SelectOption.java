@@ -1,7 +1,10 @@
 
 package utils;
 
+import java.util.Collection;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * SelectOption is a class with convenience methods for getting user
@@ -59,7 +62,7 @@ public class SelectOption {
     
     
     /**
-     * getOption presents the user with a choice from a set of
+     * variableOption presents the user with a choice from a set of
      * options and ensures that they choose a valid option.
      * @param prompt - string to use for prompt
      * @param opts - array of string options
@@ -67,7 +70,7 @@ public class SelectOption {
      * @pre the first letter of each option string is unique
      * @pre the defaultOption character is the first character of one of the options
      * @post the response character is in upper case
-     * 
+
      * @return - first character of matching option (to upper case)
      */
     public static char variableOption(String prompt, String[] opts,
@@ -115,6 +118,76 @@ public class SelectOption {
         return response;
     }
     
+    
+    /**
+     * complexVariableOption validates input where a user may select from a list of string
+     * options where the beginning of the list holds string options that ask for integer
+     * input and the end of the list holds string options that ask for char input
+     * @param prompt prompt given to user
+     * @param opts strings representing options
+     * @param startValid the first option string that asks for char input
+     * @param additionalOpts the set of integers that represent valid input for any of the initial option strings
+     * @param defaultOption the default option (must be one of the char options)
+     * @pre strings asking for char entry each begin with a unique character
+     * @pre char passed in defaultOption is a valid response character
+     * @pre startValid is an index in the range of opts
+     * @post return value is a String in upper case containing either the char
+     *       or integer input.  If the String represents an integer, it is an integer prefixed
+     *       with the character "I", and if it represents a char, it is a char prefixed
+     *       with the character "C"
+     * @return valid response string with a prefix letter of "I" to indicate integer entry
+     *         or "C" to indicate char entry
+     */
+    public static String complexVariableOption(String prompt, String[] opts, int startValid,
+            Collection<Integer> additionalOpts, char defaultOption){
+        
+        //do the validation
+        String input;
+        String response = Character.toString(defaultOption).toUpperCase();//this must be reset later
+        boolean validResponse = false;
+        
+        System.out.print(CFormat.NL + prompt + "  [" + defaultOption + "]");
+        printOptions(opts);
+        
+        do{
+            input = keyboard.nextLine().trim().toUpperCase();
+            
+            //if default is selected, return default
+            if(input.equals("")){
+                return response;
+            }
+            
+            //if input is an integer, test additionalOpts for a match
+            if(isInteger(input)){
+                Integer i = Integer.parseInt(input);
+                if(additionalOpts.contains(i)){
+                    response = "I" + input;
+                    validResponse = true;
+                }
+                
+            //if input is not an integer, test against valid string options
+            } else {
+                for(int i = startValid; i < opts.length; i++){
+                    if(opts[i].toUpperCase().charAt(0)==input.charAt(0)){
+                        response = "C"+opts[i].substring(0,1).toUpperCase();
+                        validResponse = true;
+                    }
+                }
+            }
+            
+            //if invalid, repeat process
+            if(!validResponse){
+                System.out.println("Invalid Entry.  "
+                        + "Please choose from the following:");
+                printOptions(opts);
+            }
+            
+        }while(!validResponse);
+        
+        return response;
+        
+    }
+    
     /**
      * printOptions prints out an options list at the end of the current line
      * @param opts 
@@ -126,6 +199,23 @@ public class SelectOption {
             System.out.print(CFormat.NL + CFormat.addIndent(opts[i], 1));
         }
         System.out.println(CFormat.NL);
+    }
+    
+    /**
+     * isInteger tests a string to see whether or not it is an integer
+     * @param string
+     * @return 
+     */
+    private static boolean isInteger(String string){
+        
+        Pattern p = Pattern.compile("-?[1-9]\\d*");
+        Matcher m = p.matcher(string);
+        if(m.matches()){
+            return true;
+        } else {
+            return false;
+        }
+        
     }
     
 }

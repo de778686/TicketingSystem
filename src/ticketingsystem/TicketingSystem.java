@@ -2,9 +2,11 @@ package ticketingsystem;
 
 import dataobjects.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utils.CFormat;
+import static utils.CFormat.*;
 import static utils.SelectOption.*;
 
 /**
@@ -25,11 +27,10 @@ public class TicketingSystem implements Runnable{
   
   //=====================  Instance Variables  ======================//
   private Technician currentUser = null;  //authenticated user, null if not authenticated
-  
   private Tickets tickets = new Tickets();  //tickets database table access
   private Technicians technicians = new Technicians();
   private TicketTechnicians ticketTechnicians = new TicketTechnicians();    //ticketTechnicians database table access
-  
+  private Scanner keyboard = new Scanner(System.in);
 
   /**
    * Main method for the TicketingSystem application which starts a new
@@ -173,38 +174,79 @@ public class TicketingSystem implements Runnable{
    */
   public void viewTicketsMenu(){
       
-      //if logged in user is a standard user, get a list of all tickets
-      //assigned to him/her
-      Collection<Ticket> ticketSet = null;
-      try{
-        if(currentUser.getLevel() == STANDARD){
-            ticketSet = tickets.fetchAllForTechnician(currentUser.getID());
+      //=====================  Local Data  ======================//
+      boolean quit = false;
+      
+      //wrap in do while to allow repetition of menu
+      do{
+      
+        //if logged in user is a standard user, get a list of all tickets
+        //assigned to him/her
+        Collection<Ticket> ticketSet = null;
+        try{
+          if(currentUser.getLevel() == STANDARD){
+              ticketSet = tickets.fetchAllForTechnician(currentUser.getID());
+          } else {
+              //TODO implement for admin in UI-G/19
+          }
+        }catch(Exception e){
+
+            //if there is an error fetching from the database
+            //print an error message to the console and then return
+            //to previous procedure (previous menu)
+            System.out.println("Error connecting to database.  Please try again");
+            return;
+        }
+
+        //print header
+        System.out.println(head("Assigned Tickets"));
+
+        //if there are tickets for the user, print tickets formatted by id
+
+        Collection<Integer> ticketIDs = new HashSet<>();
+        if(!ticketSet.isEmpty()){
+          for(Ticket t : ticketSet){
+
+              //store ticket IDs for selection later
+              ticketIDs.add(t.getID());
+              System.out.print(item(t.getID() + ": " + t.getTitle(), 1));
+
+          }
+          System.out.println(""); //for formatting purposes
+
+          //allow user to select a ticket or quit
+          String[] options = {
+            "Ticket ID number to view details",
+            "l - list tickets again",
+            "q - return to the main menu"
+          };
+          String prompt = "Please enter one of the following:";
+
+          String response = complexVariableOption(prompt, options, 1, ticketIDs, 'l');
+
+          //user entered a valid ticket ID
+          if(response.charAt(0)=='I'){
+
+              int ticketID = Integer.parseInt(response.substring(1));
+              System.out.println("Selected ID = " +ticketID);
+              //TODO implement in UI-G/8
+
+          //user asked to list tickets
+          } else if(response.charAt(1)=='L'){
+              //do nothing to loop the menu again
+          } else if(response.charAt(1)=='Q'){
+              System.out.println("Quit");
+              quit = true;
+          }
+
+        //if there are not tickets for the user, print out message
         } else {
-            //TODO implement for admin in UI-G/19
+            System.out.println("You have no assigned tickets!");
         }
-      }catch(Exception e){
-          
-          //if there is an error fetching from the database
-          //print an error message to the console and then return
-          //to previous procedure (previous menu)
-          System.out.println("Error connecting to database.  Please try again");
-          return;
-      }
       
-      //print header
-      System.out.println(CFormat.head("Assigned Tickets"));
+      } while (!quit);
       
-      //if there are tickets for the user, print tickets formatted by id
-      if(!ticketSet.isEmpty()){
-        for(Ticket t : ticketSet){
-            System.out.print(CFormat.item(t.getID() + ": " + t.getTitle(), 1));
-        }
-        System.out.println(""); //for formatting purposes
-        
-      //if there are not tickets for the user, print out message
-      } else {
-          System.out.println("You have no assigned tickets!");
-      }
+      
       
   }
 }
