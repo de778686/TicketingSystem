@@ -52,55 +52,41 @@ public class TicketingSystem implements Runnable{
     @Override
     public void run() {
 
-        System.out.println("====== Welcome to the Ticketing System ===== \n\n");
+        System.out.println("*********** CQD2 Ticketing System ***********\n");
+        boolean validated = false;
+        int counter = 0;
+        do{
+            System.out.println("Enter username: ");
+            String username = keyboard.nextLine();
+            System.out.println("Enter password: ");
+            String password = keyboard.nextLine();
 
-        System.out.println("Technicians: ");
-
-        //Print client info
-        Collection<Technician> technicianSet = null;
-        try {
-            technicianSet = technicians.fetchAll();
-        } catch (Exception e1) {
-            e1.printStackTrace();
-            System.exit(0);
-            //TODO edit error handling
+            login currLogin = new login(username, password);
+            if (currLogin.validate()){
+                validated = true;
+                //reset counter
+                counter = 0;
+                //present main menu
+                mainMenu();
+            }
+            else{
+                counter ++;
+                validated = false;
+                System.out.println("Invalid username/password!");
+            }
         }
-        for (Technician t : technicianSet) {
-            System.out.println(t);
-        }
-
-        System.out.println("\n\nTickets: ");
-
-        //Print ticket info
-        Collection<Ticket> ticketSet = null;
-        try {
-            ticketSet = tickets.fetchAll();
-        } catch (Exception e2) {
-            e2.printStackTrace();
-            System.exit(0);
-            //TODO edit error handling
-        }
-        for (Ticket t : ticketSet) {
-            System.out.println(t);
-        }
-
-        try {
-            System.out.println("\n\nThe Technician for ticket no1 is " + tickets.fetchTechnician(1).getName());
-            System.out.println("\n\nThe Technician for ticket no2 is " + tickets.fetchTechnician(2).getName());
-        } catch (Exception e3) {
-            e3.printStackTrace();
-            System.exit(0);
-            //TODO edit error handling
-        }
+        while(!validated && (counter < 3));
         
-        //for testing only!!
-        try {
-            currentUser = technicians.fetch(1);
-        } catch (Exception ex) {
-            Logger.getLogger(TicketingSystem.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-        }
-        mainMenu();
+        System.out.println("Too many invalid authentication attempts. Program will now exit");
+        System.exit(0);
+        
+        
+
+            
+        
+        
+        
+        
 
     } // End of main
 
@@ -123,35 +109,66 @@ public class TicketingSystem implements Runnable{
         do {
 
             //if user is a standard user, display the standard menu
-            if (currentUser.getLevel() == STANDARD) {
+            if (currentUser.getLevel() == ADMIN) {
 
                 String[] standardOpts = //standard menu options
                         {
-                    "1 - View assigned tickets",
-                    "2 - Add a ticket",
-                    "3 - Quit"
+                    "1 - View all tickets",
+                    "2 - View assigned tickets",
+                    "3 - View a ticket",
+                    "4 - Add a ticket",  
+                    "5 - Update a ticket",
+                    "6 - Delete a ticket",
+                    //View a technician //view all technicians
+                    "7 - Add a technician",
+                    "8 - Modify technician level",
+                    "9 - Quit"
                   };
             response = variableOption(prompt, standardOpts, '1');
             
             switch(response){
 
-              //view assigned tickets
+              //view all tickets
               case '1':
-
-                  viewTicketsMenu();
+                  viewAllTickets();
                   break;
-
-
-              //add a ticket
+                  
+              //view assigned tickets
               case '2':
-
-                  //TODO implement
-
+                  viewAssignedTickets();
                   break;
-
-
-              //quit
+                  
+              //view a ticket
               case '3':
+                  viewTicket();
+                  break;
+                  
+              //add a ticket
+              case '4':
+                  addTicket();
+                  break;
+                  
+              //update a ticket
+              case '5':
+                  updateTicket();
+                  break;
+                  
+              //delete a ticket
+              case '6':
+                  deleteTicket();
+                  break;
+                  
+              //view a ticket
+              case '7':
+                  addTechnician();
+                  break;
+                  
+              //view a ticket
+              case '8':
+                  modifyTechnicianLevel();
+                  break;
+                  
+              case '9':
 
                   //if quit is confirmed, set quit to true so menu loop
                   //will end
@@ -160,9 +177,57 @@ public class TicketingSystem implements Runnable{
                   }
                   break;
           }//end switch
+            
 
         }//end if standard user
+            else{
+                String[] standardOpts = //standard menu options
+                {
+ 
+                    "1 - View assigned tickets",
+                    "2 - View a ticket",
+                    "3 - Add a ticket",  
+                    "4 - Update a ticket",
+                    "5 - Quit"
+                };
+                response = variableOption(prompt, standardOpts, '1');
 
+                switch(response){
+                    //view assigned ticket
+                    case '1':
+                        viewAssignedTickets();
+                        break;
+
+                    //view a ticket
+                    case '2':
+                        viewTicket();
+                        break;
+                        
+
+                    //add a ticket
+                    case '3':
+                        addTicket();
+                        break;
+                        
+
+                    //update a ticket
+                    case '4':
+                        updateTicket();
+                        break;
+
+                    case '5':
+
+                        //if quit is confirmed, set quit to true so menu loop
+                        //will end
+                        if(yesNoOption("Are you sure you want to quit?", true)){
+                            quit = true;
+                        }
+                        break; 
+                }
+            }
+            
+            
+            
     } while(!quit);
     
   }
@@ -244,9 +309,47 @@ public class TicketingSystem implements Runnable{
             System.out.println("You have no assigned tickets!");
         }
       
-      } while (!quit);
+      } while (!quit);  
+  }
+  
+  //get and displays information on all tickets
+  public void viewAllTickets(){
       
+  }
+  
+  //displays all tickets based on technician's ID in ticket's table
+  public void viewAssignedTickets(){
       
+  }
+  
+  //displays ticket details based on user entry
+  public void viewTicket(){
+      
+  }
+  
+  //creates a ticket entry which is by default assigned to the creator. Only technicians with
+  //level 1 or > 0 can assign this ticket to a different technician
+  public void addTicket(){
+      
+  }
+  
+  //update ticket information with limitations based on technician level
+  public void updateTicket(){
+      
+  }
+  
+  //deletes or closes the ticket in question. only technicians with level > 0 can do this.
+  public void deleteTicket(){
+      
+  }
+  
+  //adds a new entry into the technician table. only technicians with level > 0 can do this.
+  public void addTechnician(){
+      
+  }
+  
+  //modifies the level of the technician. only technicians with level > 0 can do this.
+  public void  modifyTechnicianLevel(){
       
   }
 }

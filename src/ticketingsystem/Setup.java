@@ -30,9 +30,7 @@ public class Setup {
 
         try {
             Tickets tickets = new Tickets();
-            Clients clients = new Clients();
             Technicians technicians = new Technicians();
-            TicketClients ticket_clients = new TicketClients();
             TicketTechnicians ticket_technicians = new TicketTechnicians();
 
 
@@ -73,9 +71,9 @@ public class Setup {
             
             
             
-            technicians.add("Gary", 0);  // 1
-            technicians.add("Peter", 0); // 2
-            technicians.add("Corbin", 1); // 2
+            technicians.add("corbus", "maximus1", "Corbin", 0);  // 1
+            technicians.add("davidus", "apple1", "David", 0);  // 2
+            technicians.add("quinntus", "mango1", "Quinn", 1); // 2
             
             System.out.println("\n\nOur Technicians are: ");
             for (Technician t : technicians.fetchAll()) {

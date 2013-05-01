@@ -12,8 +12,10 @@ import java.util.Objects;
 public class Technician {
  
     //=====================  Instance Variables  ======================//
-    private String name;    //name of the technician
     private int ID;         //id used for associations in the database
+    private String username;    //username of the technician
+    private String password;    //password the technician
+    private String name;    //name of the technician
     private int level;      //tech level
     private List<Ticket> associatedTickets; //list of tickets associated with
                                             //this technician
@@ -28,9 +30,11 @@ public class Technician {
      * @param ID
      * @param level 
      */
-    public Technician(String name, int ID, int level) {
-        this.name = name;
+    public Technician(int ID, String username, String password, String name, int level) {
         this.ID = ID;
+        this.username = username;
+        this.password = password;
+        this.name = name;
         this.level = level;
         this.associatedTickets = new ArrayList<>();
     }
@@ -38,14 +42,18 @@ public class Technician {
     /**
      * This constructor creates a new Technician object with the name,
      * id, level, and associated tickets passed as a parameter
-     * @param name
      * @param ID
+     * @param username
+     * @param password
+     * @param name
      * @param level
      * @param associatedTickets 
      */
-    public Technician(String name, int ID, int level, List<Ticket> associatedTickets) {
-        this.name = name;
+    public Technician(int ID, String username, String password, String name, int level, List<Ticket> associatedTickets) {
         this.ID = ID;
+        this.username = username;
+        this.password = password;
+        this.name = name;
         this.level = level;
         this.associatedTickets = associatedTickets;
     }
@@ -54,19 +62,35 @@ public class Technician {
     //====================  Getters  =======================//
 
     /**
-     * Returns name of the technician
-     * @return name as a String
-     */
-    public String getName() {
-        return name;
-    }
-
-    /*
      * Returns ID of the technician
      * @return id as int
      */
     public int getID() {
         return ID;
+    }
+    
+    /**
+     * Returns name of the technician username
+     * @return name as a String
+     */
+    public String getUsername() {
+        return username;
+    }
+    
+    /**
+     * Returns name of the technician password
+     * @return name as a String
+     */
+    public String getPassword() {
+        return password;
+    }
+    
+    /**
+     * Returns name of the technician
+     * @return name as a String
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -123,8 +147,10 @@ public class Technician {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + Objects.hashCode(this.name);
         hash = 53 * hash + this.ID;
+        hash = 53 * hash + Objects.hashCode(this.username);
+        hash = 53 * hash + Objects.hashCode(this.password);
+        hash = 53 * hash + Objects.hashCode(this.name);
         hash = 53 * hash + this.level;
         hash = 53 * hash + Objects.hashCode(this.associatedTickets);
         return hash;
@@ -144,7 +170,8 @@ public class Technician {
         }
         return true;
     }
-
+    
+    //Quinn: This needs print out al the fields of the technician table
     @Override
     public String toString() {
         return "Technician{" + "name=" + name + ", ID=" + ID

@@ -19,7 +19,7 @@ public class Ticket {
     private String title;               //title (subject) of the ticket
     private Status status;              //status of the ticket (ie open, close, etc.)
     private Technician creator;         //technician that created the ticket
-    private Client client;              //client of the ticket (ie customer, employee)
+    private String client;              //client of the ticket (ie customer, employee)
     private Date dateCreated;           //date ticket was created
     private Date dateModified;          //date of last modification to the ticket
     private List<Entry> entries;        //list of entries associated with the ticket
@@ -42,7 +42,7 @@ public class Ticket {
      * @param client 
      * @param dateCreated
      */
-    public Ticket(int ID, String title, Status status, Technician creator, Client client, Date dateCreated) {
+    public Ticket(int ID, String title, Status status, Technician creator, String client, Date dateCreated) {
         this.ID = ID;
         this.title = title;
         this.status = status;
@@ -82,7 +82,7 @@ public class Ticket {
      * @param dateModified
      * @param entries 
      */
-    public Ticket(int ID, String title, Status status, Technician creator, Client client, 
+    public Ticket(int ID, String title, Status status, Technician creator, String client, 
             Date dateCreated, Date dateModified, List<Entry> entries) {
         this.ID = ID;
         this.title = title;
@@ -133,7 +133,7 @@ public class Ticket {
      * return client associated with the ticket
      * @return 
      */
-    public Client getClient() {
+    public String getClient() {
         return client;
     }
 

@@ -19,8 +19,8 @@ public class Tickets implements DBTable {
   private DB db = new DB();
   
   // collect Clients:
-  Clients clients = new Clients();  
-  Collection<Client> clientColl = new LinkedHashSet<Client>();
+  String clients = new String();  
+  Collection<String> clientColl = new LinkedHashSet<String>();
   
    
     
@@ -74,7 +74,7 @@ public class Tickets implements DBTable {
   
   
     public Ticket add(int ID, String title,Status status, Technician creator,
-          Client client, java.sql.Date dateCreated, java.sql.Date dateModified, List<Entry> entries) throws Exception {
+          String client, java.sql.Date dateCreated, java.sql.Date dateModified, List<Entry> entries) throws Exception {
     Connection cx = db.connect();
     String sql;
    
@@ -83,7 +83,8 @@ public class Tickets implements DBTable {
     PreparedStatement st = cx.prepareStatement(sql);
     st.setString(1, status.toString());
     st.setString(2, creator.getName());
-    st.setString(3, client.getName());
+    //@David Emery... the line below used to be "client.getName"
+    st.setString(3, client.toString());
     st.setDate(4, dateCreated);
     st.setDate(5, dateModified);
     
@@ -126,7 +127,7 @@ public class Tickets implements DBTable {
   }
   
   
-  public Ticket add(int ID, String status, Technician creator, Client client, java.sql.Date dateCreated) throws Exception {
+  public Ticket add(int ID, String status, Technician creator, String client, java.sql.Date dateCreated) throws Exception {
     return add(ID, status, creator, client,  dateCreated);
   }
   
@@ -147,35 +148,8 @@ public class Tickets implements DBTable {
     }
     return new Ticket(id,rs.getString("title"), rs.getString("status"), rs.getString("creator"), rs.getString("client"), rs.getString("dateCreated"));
   }
-  
-  
-  
-  
-  
-  
-  // Fetch a technician for a ticket===============================================
-  public Technician fetchTechnician(int id) throws Exception {
-    Connection cx = db.connect();
-    String sql = String.format("select * from `%s` where `id`=?", "technicians");
-    //System.out.println("sql_op: " + sql_op);
-    
-    // Testing:
-//    System.out.println(sql);
-    
-    PreparedStatement st = cx.prepareStatement(sql);
-    st.setInt(1, id);
-    ResultSet rs = st.executeQuery();
-    if (!rs.next()) {
-      return null;
-    }
-    return new Technician(rs.getString("name"), rs.getInt("id"), rs.getInt("level"));
-  }
-  
-  
+
   //============================================================================
-  
-  
-  
   // Fetches all tickets for a given technician.
   // Takes technicians id as a parameter
   public Collection<Ticket>fetchAllForTechnician(int id) throws Exception {
