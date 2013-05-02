@@ -58,6 +58,16 @@ public class Technician {
         this.associatedTickets = associatedTickets;
     }
     
+    //Constructor used for login validation
+    public Technician(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+    
+    //Empty constructor used for login validation
+    public Technician() {
+     
+    }
     
     //====================  Getters  =======================//
 
@@ -171,14 +181,10 @@ public class Technician {
         return true;
     }
     
-    //Quinn: This needs print out al the fields of the technician table
     @Override
     public String toString() {
-        return "Technician{" + "name=" + name + ", ID=" + ID
-                + ", level=" + level + ", associatedTickets=" 
-                + associatedTickets + '}';
+        return "Technician{ID=" + ID + ", username=" + username + ", password="
+                + password + ", name=" + name + ", level=" + level + 
+                ", associatedTickets=" + associatedTickets + '}';
     }
-    
-    
-    
 }

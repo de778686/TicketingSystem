@@ -247,8 +247,4 @@ public class Ticket {
                 + ", dateCreated=" + dateCreatedString + ", dateModified=" 
                 + dateModified + ", entries=" + entries + '}';
     }
-    
-    
-    
-    
 }

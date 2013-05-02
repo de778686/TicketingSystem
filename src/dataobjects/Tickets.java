@@ -70,7 +70,15 @@ public class Tickets implements DBTable {
     return new Ticket(id, title, status.toString(), creator, client, dateCreated); // add method
   }
   
-  
+  public void remove(int ID) throws Exception {
+    Connection cx = db.connect();
+    String sql;
+
+    sql = String.format("delete from `%s` where id=(?)", table);
+    PreparedStatement st = cx.prepareStatement(sql);
+    st.setInt(1, ID);
+    st.executeUpdate();
+  }
   
   
     public Ticket add(int ID, String title,Status status, Technician creator,
