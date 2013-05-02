@@ -7,17 +7,19 @@ import java.util.*;
  * @author dg
  */
 public class login {
+    
+    //=====================  Instance Variables  ======================//
     private String userName;
     private String pswd;
     private Technicians technicians;
     
-    
+    //========================  Constructors  =========================//
     public login(String username, String password){
         userName = username;
         pswd = password;
     }
     
-    //setters
+    //========================  Setters  =========================//
     public void setUserName(String username){
         userName = username;
     }
@@ -26,7 +28,7 @@ public class login {
         pswd = password;
     }
     
-    //getters
+    //========================  Getters  =========================//
     public String getUserName(){
         return userName;
     }
@@ -37,9 +39,11 @@ public class login {
     
     //methods
     public boolean validate(){
+        
         boolean valid = false;
         Technician currentTech = new Technician(userName, pswd);
         technicians = new Technicians();
+        
         try{
             Technician actualTech = technicians.fetchByUsername(userName);
             if(actualTech == null){
@@ -49,8 +53,9 @@ public class login {
                 System.out.println("Got it baby!");
                 valid = true;
             }
-            else
+            else {
                 valid = false;
+            }
         }
         catch(Exception ex){
             System.out.println("Error loading technicians collection");

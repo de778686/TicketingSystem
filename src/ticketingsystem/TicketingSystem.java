@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static utils.CFormat.*;
+import utils.SelectOption;
 import static utils.SelectOption.*;
 
 /**
@@ -51,7 +52,7 @@ public class TicketingSystem implements Runnable {
     @Override
     public void run() {
 
-        System.out.println("*********** CQD2 Ticketing System ***********\n");
+        System.out.println(titleBox("CQD2 Ticketing System"));
         boolean validated = false;
         int counter = 0;
         do {
@@ -72,8 +73,7 @@ public class TicketingSystem implements Runnable {
                 
                 //reset counter
                 counter = 0;
-                //present main menu
-                mainMenu();
+
             } else {
                 counter++;
                 validated = false;
@@ -81,16 +81,16 @@ public class TicketingSystem implements Runnable {
             }
         } while (!validated && (counter < 3));
 
-        System.out.println("Too many invalid authentication attempts. Program will now exit");
-        System.exit(0);
-
-
-
-
-
-
-
-
+        //if counter is 3, there were too many login attempts
+        if(counter == 3){
+            System.out.println("Too many invalid authentication attempts. Program will now exit");
+            System.exit(0);
+            
+        //if counter is not 3, login was successful and we should proceed
+        //to the main menu
+        } else {
+            mainMenu();
+        }
 
     } // End of main
 
@@ -211,37 +211,23 @@ public class TicketingSystem implements Runnable {
                 String[] standardOpts = //standard menu options
                         {
                     "1 - View assigned tickets",
-                    "2 - View a ticket",
-                    "3 - Add a ticket",
-                    "4 - Update a ticket",
-                    "5 - Quit"
+                    "2 - Add a ticket",
+                    "3 - Quit"
                 };
                 response = variableOption(prompt, standardOpts, '1');
 
                 switch (response) {
                     //view assigned ticket
                     case '1':
-                        viewAssignedTickets();
+                        viewTicketsMenu();
                         break;
-
-                    //view a ticket
-                    case '2':
-                        viewTicket();
-                        break;
-
 
                     //add a ticket
-                    case '3':
+                    case '2':
                         addTicket();
                         break;
 
-
-                    //update a ticket
-                    case '4':
-                        updateTicket();
-                        break;
-
-                    case '5':
+                    case '3':
 
                         //if quit is confirmed, set quit to true so menu loop
                         //will end
@@ -251,8 +237,6 @@ public class TicketingSystem implements Runnable {
                         break;
                 }
             }
-
-
 
         } while (!quit);
 
@@ -318,15 +302,16 @@ public class TicketingSystem implements Runnable {
                 //user entered a valid ticket ID
                 if (response.charAt(0) == 'I') {
 
+                    //go to the submenu for this ticket
                     int ticketID = Integer.parseInt(response.substring(1));
-                    System.out.println("Selected ID = " + ticketID);
-                    //TODO implement in UI-G/8
-
+                    System.out.println("Ticket " + ticketID + " selected.");
+                    ticketSubMenu(ticketID);
+                    
                     //user asked to list tickets
                 } else if (response.charAt(1) == 'L') {
                     //do nothing to loop the menu again
                 } else if (response.charAt(1) == 'Q') {
-                    System.out.println("Quit");
+                    //System.out.println("Quit");
                     quit = true;
                 }
 
@@ -336,6 +321,52 @@ public class TicketingSystem implements Runnable {
             }
 
         } while (!quit);
+    }
+
+    /**
+     * ticketSubMenu allows a user to manipulate information about a
+     * particular ticket
+     * @param ticketID t
+     */
+    public void ticketSubMenu(int ticketID){
+        
+        String[] standardOptions = {
+                      "1 - View ticket details",
+                      "2 - Add entry",
+                      "3 - Go Back"
+                    };
+        String prompt = "Please select one of the following options";            
+        
+        char choice; //hold user's menu choice
+        
+        if(currentUser.getLevel() == STANDARD){
+            choice = SelectOption.variableOption(prompt, standardOptions, '1');
+            
+            switch(choice){
+                
+                case '1':
+                    
+                    break;
+                case '2':
+                    
+                    break;
+                case '3':
+                    //leave method to return to previous menu
+                    return;
+                
+            }
+            
+            
+            
+        }
+                    
+                    
+                    
+                    
+                    
+
+        
+        
     }
 
     //get and displays information on all tickets
