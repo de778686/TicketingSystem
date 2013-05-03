@@ -314,12 +314,12 @@ public class CFormat {
     /**
      * toTable takes a two-dimensional array (in list form) of strings
      * and formats these as a table.  Each inner-array represents
-     * a row in the table, with the first inner-array representing the
-     * table headings
+     * a row in the table.  If 'headers' is set to true, the first inner-array 
+     * represents the table headings
      * @param array
      * @return 
      */
-    public static String toTable(ArrayList<ArrayList<String>> array){
+    public static String toTable(ArrayList<ArrayList<String>> array, boolean header){
         
         //=====================  Local Data  ======================//
         final int COL_DIVIDE_WIDTH = 8;
@@ -349,12 +349,15 @@ public class CFormat {
         //initialize message
         msg.append(CFormat.NL).append(CFormat.NL);
         
-        //create set of dashes and insert into array
-        ArrayList<String> dashes = new ArrayList<>();
-        for(int i = 0; i < array.get(0).size(); i++){
-            dashes.add(addDashes("", maxLengths[i]));
+        //create set of dashes and insert into array if first
+        //row is supposed to be the header row
+        if(header){
+            ArrayList<String> dashes = new ArrayList<>();
+            for(int i = 0; i < array.get(0).size(); i++){
+                dashes.add(addDashes("", maxLengths[i]));
+            }
+            array.add(1, dashes);
         }
-        array.add(1, dashes);
         
         //add each row to the msg
         StringBuilder sb = new StringBuilder();

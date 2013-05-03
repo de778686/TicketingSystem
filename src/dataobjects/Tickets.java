@@ -188,7 +188,7 @@ public class Tickets implements DBTable {
       String creator = rs.getString("creator");
       String client = rs.getString("client");
       String dateCreated = rs.getString("dateCreated");
-      
+      String dateModified = rs.getString("dateModified");
  
       coll.add(new Ticket(ticketID, title, status, creator, client, dateCreated));
     }

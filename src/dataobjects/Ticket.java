@@ -137,21 +137,21 @@ public class Ticket {
         return client;
     }
 
-    /**
-     * return date ticket was created
-     * @return 
-     */
-    public Date getDateCreated() {
-        return dateCreated;
-    }
+//    /**
+//     * return date ticket was created
+//     * @return 
+//     */
+//    public Date getDateCreated() {
+//        return dateCreated;
+//    }
 
-    /**
-     * return date ticket was last modified
-     * @return null if there is no modified date for the object
-     */
-    public Date getDateModified() {
-        return dateModified;
-    }
+//    /**
+//     * return date ticket was last modified
+//     * @return null if there is no modified date for the object
+//     */
+//    public Date getDateModified() {
+//        return dateModified;
+//    }
 
     /**
      * return list of entries associated with the ticket
@@ -168,6 +168,16 @@ public class Ticket {
     public Iterator<Entry> iterator(){
         return entries.iterator();
     }
+
+    /**
+     * return dateCreatedString
+     * @return 
+     */
+    public String getDateCreatedString() {
+        return dateCreatedString;
+    }
+    
+    
     
     
     //========================  Setters  =========================//

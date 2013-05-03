@@ -1,9 +1,11 @@
 package ticketingsystem;
 
 import dataobjects.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -117,17 +119,11 @@ public class TicketingSystem implements Runnable {
 
                 String[] standardOpts = //standard menu options
                         {
-                    "1 - View all tickets",
-                    "2 - View assigned tickets",
-                    "3 - View a ticket",
-                    "4 - Add a ticket",
-                    "5 - Update a ticket",
-                    "6 - Delete a ticket",
-                    "7 - view all technicians",
-                    "8 - View a technician",
-                    "9 - Add a technician",
-                    "M - Modify technician level",
-                    "Q - Quit"
+                    "1 - View tickets",
+                    "2 - Add a ticket",
+                    "3 - Add a technician",
+                    "4 - Assign a technician",
+                    "q - Quit"
                 };
                 response = variableOption(prompt, standardOpts, '1');
 
@@ -135,63 +131,22 @@ public class TicketingSystem implements Runnable {
 
                     //view all tickets
                     case '1':
-                        viewAllTickets();
-                        break;
-
-                    //view assigned tickets
-                    case '2':
-                        viewAssignedTickets();
-                        break;
-
-                    //view a ticket
-                    case '3':
-                        viewTicket();
+                        viewTicketsMenu();
                         break;
 
                     //add a ticket
-                    case '4':
+                    case '2':
                         addTicket();
-                        break;
-
-                    //update a ticket
-                    case '5':
-                        updateTicket();
-                        break;
-
-                    //delete a ticket
-                    case '6':
-                        deleteTicket();
-                        break;
-
-                    //view all technicians
-                    case '7':
-                        try{
-                            viewAllTechnicians();
-                        }
-                        catch(Exception ex){
-                            System.out.println("Error getting technicians list");
-                        }
-                        
-                        break;
-                        
-                    //view a technician
-                    case '8':
-                       try{
-                            viewTechnician();
-                        }
-                        catch(Exception ex){
-                            System.out.println("Error getting technician");
-                        }
                         break;
                         
                     //add a technician
-                    case '9':
+                    case '3':
                         addTechnician();
                         break;
 
                     //modify technician level
-                    case 'M':
-                        modifyTechnicianLevel();
+                    case '4':
+                        assignTechnician();
                         break;
                         
                     //quit program
@@ -210,9 +165,9 @@ public class TicketingSystem implements Runnable {
             else {
                 String[] standardOpts = //standard menu options
                         {
-                    "1 - View assigned tickets",
+                    "1 - View tickets",
                     "2 - Add a ticket",
-                    "3 - Quit"
+                    "q - Quit"
                 };
                 response = variableOption(prompt, standardOpts, '1');
 
@@ -227,7 +182,7 @@ public class TicketingSystem implements Runnable {
                         addTicket();
                         break;
 
-                    case '3':
+                    case 'Q':
 
                         //if quit is confirmed, set quit to true so menu loop
                         //will end
@@ -345,7 +300,7 @@ public class TicketingSystem implements Runnable {
             switch(choice){
                 
                 case '1':
-                    
+                    viewTicket(ticketID);
                     break;
                 case '2':
                     
@@ -355,32 +310,78 @@ public class TicketingSystem implements Runnable {
                     return;
                 
             }
-            
-            
-            
         }
-                    
-                    
-                    
-                    
-                    
-
-        
-        
     }
 
-    //get and displays information on all tickets
-    public void viewAllTickets() {
-        
-    }
-
-    //displays all tickets based on technician's ID in ticket's table
-    public void viewAssignedTickets() {
-        
-    }
 
     //displays ticket details based on user entry
-    public void viewTicket() {
+    public void viewTicket(int ticketID) {
+        
+        //=====================  Local Data  ======================//
+        Ticket ticket;  //ticket to view details from
+        
+        try{
+            ticket = tickets.fetch(ticketID);
+        } catch(Exception e){
+            System.out.println("Unable to display info for this ticket.");
+            return;
+        }
+        
+        //build table based on ticket info
+        ArrayList<ArrayList<String>> table = new ArrayList<>();
+        
+        //general info
+        ArrayList<String> row1 = new ArrayList<>();
+        row1.add("Ticket ID:");
+        row1.add(Integer.toString(ticket.getID()));
+        table.add(row1);
+        ArrayList<String> row2 = new ArrayList<>();
+        row2.add("Date Created:");
+        row2.add(ticket.getDateCreatedString().toString());
+        table.add(row2);
+        ArrayList<String> row3 = new ArrayList<>();
+        
+        
+        //assigned technicians
+        List<Technician> techs = null;
+        try{
+            techs = ticketTechnicians.fetchTechniciansByTicketID(ticketID);
+        }catch(Exception e){
+            //TODO improve error handling here in future release
+            System.out.println("Unable to display info for this ticket.");
+            return;
+        }
+        
+        //if there are techs to add, add them to the list
+        if(techs!=null && !techs.isEmpty()){
+            //make first row of tech info have row title
+            ArrayList<String> row4 = new ArrayList<>();
+            row4.add("Assigned Technicians:");
+            row4.add(techs.get(0).getName());
+            table.add(row4);
+            
+            for(int i = 1; i < techs.size(); i++){
+                row4 = new ArrayList<>();
+                row4.add("");
+                row4.add(techs.get(i).getName());
+            }
+        }
+        
+        //print out title
+        System.out.println(head("Ticket Info:") + NL);
+        
+        //print out description
+        System.out.println(ticket.getTitle());
+        
+        //print table out
+        System.out.println(toTable(table, false));
+        
+        //print out ticket entries
+        
+        //TODO implement this code
+        
+        
+        
         
     }
 
@@ -444,5 +445,9 @@ public class TicketingSystem implements Runnable {
         System.out.print(message);
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
+    }
+
+    private void assignTechnician() {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }
