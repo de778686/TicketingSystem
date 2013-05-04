@@ -69,13 +69,12 @@ public class TicketingSystem implements Runnable {
             login currLogin = new login(username, password);
             if (currLogin.validate()) {
                 validated = true;
-                try{
+                try {
                     currentUser = technicians.fetchByUsername(username);
-                }
-                catch(Exception ex){
+                } catch (Exception ex) {
                     System.out.println("Error fetching current user!");
                 }
-                
+
                 //reset counter
                 counter = 0;
 
@@ -87,12 +86,12 @@ public class TicketingSystem implements Runnable {
         } while (!validated && (counter < 3));
 
         //if counter is 3, there were too many login attempts
-        if(counter == 3){
+        if (counter == 3) {
             System.out.println("Too many invalid authentication attempts. Program will now exit");
             System.exit(0);
-            
-        //if counter is not 3, login was successful and we should proceed
-        //to the main menu
+
+            //if counter is not 3, login was successful and we should proceed
+            //to the main menu
         } else {
             mainMenu();
         }
@@ -141,7 +140,7 @@ public class TicketingSystem implements Runnable {
                     case '2':
                         addTicket();
                         break;
-                        
+
                     //add a technician
                     case '3':
                         addTechnician();
@@ -151,7 +150,7 @@ public class TicketingSystem implements Runnable {
                     case '4':
                         assignTechnician();
                         break;
-                        
+
                     //quit program
                     case 'Q':
 
@@ -264,7 +263,7 @@ public class TicketingSystem implements Runnable {
                     int ticketID = Integer.parseInt(response.substring(1));
                     System.out.println("Ticket " + ticketID + " selected.");
                     ticketSubMenu(ticketID);
-                    
+
                     //user asked to list tickets
                 } else if (response.charAt(1) == 'L') {
                     //do nothing to loop the menu again
@@ -286,58 +285,59 @@ public class TicketingSystem implements Runnable {
      * particular ticket
      * @param ticketID t
      */
-    public void ticketSubMenu(int ticketID){
-        
-        String[] standardOptions = {
-                      "1 - View ticket details",
-                      "2 - Add entry",  // DavidE
-                      "3 - Go Back"
-                    };
-        String prompt = "Please select one of the following options";            
-        
-        char choice; //hold user's menu choice
-        
-        if(currentUser.getLevel() == STANDARD){
-            choice = SelectOption.variableOption(prompt, standardOptions, '1');
-            
-            switch(choice){
-                
-                case '1':
-                    viewTicket(ticketID);
-                    break;
-                case '2':
-                    try {
-                        addEntry(ticketID);
-                    } catch (Exception ex) {
-                        System.out.println("Unable to add entry");
-                        ex.printStackTrace();
-                    }
-                    break;
-                case '3':
-                    //leave method to return to previous menu
-                    return;
-                
+    public void ticketSubMenu(int ticketID) {
+
+        while (true) {
+            String[] standardOptions = {
+                "1 - View ticket details",
+                "2 - Add entry", // DavidE
+                "3 - Go Back"
+            };
+            String prompt = "Please select one of the following options";
+
+            char choice; //hold user's menu choice
+
+            if (currentUser.getLevel() == STANDARD) {
+                choice = SelectOption.variableOption(prompt, standardOptions, '1');
+
+                switch (choice) {
+
+                    case '1':
+                        viewTicket(ticketID);
+                        break;
+                    case '2':
+                        try {
+                            addEntry(ticketID);
+                        } catch (Exception ex) {
+                            System.out.println("Unable to add entry");
+                            ex.printStackTrace();
+                        }
+                        break;
+                    case '3':
+                        //leave method to return to previous menu
+                        return;
+
+                }
             }
         }
     }
 
-
     //displays ticket details based on user entry
     public void viewTicket(int ticketID) {
-        
+
         //=====================  Local Data  ======================//
         Ticket ticket;  //ticket to view details from
-        
-        try{
+
+        try {
             ticket = tickets.fetch(ticketID);
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Unable to display info for this ticket.");
             return;
         }
-        
+
         //build table based on ticket info
         ArrayList<ArrayList<String>> table = new ArrayList<>();
-        
+
         //general info
         ArrayList<String> row1 = new ArrayList<>();
         row1.add("Ticket ID:");
@@ -348,58 +348,60 @@ public class TicketingSystem implements Runnable {
         row2.add(ticket.getDateCreatedString().toString());
         table.add(row2);
         ArrayList<String> row3 = new ArrayList<>();
-        
-        
+
+
         //assigned technicians
         List<Technician> techs = null;
-        try{
+        try {
             techs = ticketTechnicians.fetchTechniciansByTicketID(ticketID);
-        }catch(Exception e){
+        } catch (Exception e) {
             //TODO improve error handling here in future release
             System.out.println("Unable to display info for this ticket.");
             return;
         }
-        
+
         //if there are techs to add, add them to the list
-        if(techs!=null && !techs.isEmpty()){
+        if (techs != null && !techs.isEmpty()) {
             //make first row of tech info have row title
             ArrayList<String> row4 = new ArrayList<>();
             row4.add("Assigned Technicians:");
             row4.add(techs.get(0).getName());
             table.add(row4);
-            
-            for(int i = 1; i < techs.size(); i++){
+
+            for (int i = 1; i < techs.size(); i++) {
                 row4 = new ArrayList<>();
                 row4.add("");
                 row4.add(techs.get(i).getName());
             }
         }
-        
+
         //print out title
         System.out.println(head("Ticket Info:") + NL);
-        
+
         //print out description
         System.out.println(ticket.getTitle());
-        
+
         //print table out
         System.out.println(toTable(table, false));
-        
+
         //print out ticket entries - David E: ================================//
         Entry entry;
-        
-         // entries for ticket:
+
+        // entries for ticket:
         List<Entry> entriesList = null;
-        try{
+        try {
             entriesList = entries.fetchAllFromTicket(ticketID);
-        }catch(Exception e){
+        } catch (Exception e) {
             //TODO improve error handling here in future release
             System.out.println("Unable to display entries for this ticket.");
             return;
         }
-        
+
         if (entriesList.isEmpty()) {
             System.out.println("This Ticket has no entries.");
-        } else{System.out.println("Entries: ");}
+        } else {
+            System.out.println("Entries: ");
+        }
 
         // One table for every entry: 
         for (int i = 0; i < entriesList.size(); i++) {
@@ -426,41 +428,37 @@ public class TicketingSystem implements Runnable {
             //print the entryTable out
             System.out.println(toTable(entryTable, false));
         }
-        
+
     } // End of viewTicket.
 
     //creates a ticket entry which is by default assigned to the creator. Only technicians with
     //level 1 or > 0 can assign this ticket to a different technician
     public void addTicket() {
-        
     }
 
-    
     // Creates an entry and links it to the ticket specified by the parameter(ticketID):
     public void addEntry(int ticketID) throws Exception {
         Entry entry;
         String creationDate;
         String creatorName;
         String text;
-        
+
         System.out.println("creationDate:");
         creationDate = keyboard.nextLine();
         System.out.println("creatorName:");
         creatorName = keyboard.nextLine();
         System.out.println("text:");
         text = keyboard.nextLine();
-        
+
         // creates entry in DataBase:
         entry = entries.add(creationDate, creatorName, text);
-        
+
         // links entry to ticket:
         ticketEntries.add(entry.getID(), ticketID);
     }
-    
-    
+
     //update ticket information with limitations based on technician level
     public void updateTicket() {
-        
     }
 
     //deletes or closes the ticket in question. only technicians with level > 0 can do this.
@@ -468,9 +466,9 @@ public class TicketingSystem implements Runnable {
         String line = prompt("Ticket ID to remove (-1 to cancel): ");
         try {
             int id = Integer.parseInt(line);
-            if(id != -1) {
+            if (id != -1) {
                 try {
-                tickets.remove(id);
+                    tickets.remove(id);
                 } catch (Exception e) {
                     System.err.println("Unable to delete ticket " + id);
                 }
@@ -484,12 +482,10 @@ public class TicketingSystem implements Runnable {
 
     //adds a new entry into the technician table. only technicians with level > 0 can do this.
     public void addTechnician() {
-        
     }
 
     //modifies the level of the technician. only technicians with level > 0 can do this.
     public void modifyTechnicianLevel() {
-        
     }
 
     // View the information for a single technician
@@ -507,7 +503,7 @@ public class TicketingSystem implements Runnable {
             System.out.println(tech.toString());
         }
     }
-    
+
     private String prompt(String message) {
         System.out.print(message);
         Scanner sc = new Scanner(System.in);
