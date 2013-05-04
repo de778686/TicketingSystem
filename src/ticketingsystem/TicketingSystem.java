@@ -308,6 +308,7 @@ public class TicketingSystem implements Runnable {
                     case '2':
                         try {
                             addEntry(ticketID);
+                            viewTicket(ticketID);
                         } catch (Exception ex) {
                             System.out.println("Unable to add entry");
                             ex.printStackTrace();
