@@ -1,5 +1,6 @@
 package ticketingsystem;
 
+import java.util.LinkedHashSet;
 import dataobjects.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,7 @@ public class TicketingSystem implements Runnable {
     //=====================  Instance Variables  ======================//
     private Technician currentUser = null;  //authenticated user, null if not authenticated
     private Tickets tickets = new Tickets();  //tickets database table access
+    private Entries entries = new Entries();
     private Technicians technicians = new Technicians();
     private TicketTechnicians ticketTechnicians = new TicketTechnicians();    //ticketTechnicians database table access
     private Scanner keyboard = new Scanner(System.in);
@@ -376,14 +378,50 @@ public class TicketingSystem implements Runnable {
         //print table out
         System.out.println(toTable(table, false));
         
-        //print out ticket entries
+        //print out ticket entries - David E: ================================//
+        Entry entry;
         
-        //TODO implement this code
+         // entries for ticket:
+        List<Entry> entriesList = null;
+        try{
+            entriesList = entries.fetchAllFromTicket(ticketID);
+        }catch(Exception e){
+            //TODO improve error handling here in future release
+            System.out.println("Unable to display entries for this ticket.");
+            return;
+        }
         
+        if (entriesList.isEmpty()) {
+            System.out.println("This Ticket has no entries.");
+        } else{System.out.println("Entries: ");}
+
+        // One table for every entry: 
+        for (int i = 0; i < entriesList.size(); i++) {
+            entry = entriesList.get(i);
+            //build a table based on entries
+            ArrayList<ArrayList<String>> entryTable = new ArrayList<>();
+            ArrayList<String> entryRow1 = new ArrayList<>();
+            entryRow1.add("Entry ID:");
+            entryRow1.add(Integer.toString(entry.getID()));
+            entryTable.add(entryRow1);
+            ArrayList<String> entryRow2 = new ArrayList<>();
+            entryRow2.add("Creation Date:");
+            entryRow2.add(entry.getCreationDate());
+            entryTable.add(entryRow2);
+            ArrayList<String> entryRow3 = new ArrayList<>();
+            entryRow3.add("Creator:");
+            entryRow3.add(entry.getCreator());
+            entryTable.add(entryRow3);
+            ArrayList<String> entryRow4 = new ArrayList<>();
+            entryRow4.add("Text:");
+            entryRow4.add(entry.getText());
+            entryTable.add(entryRow4);
+
+            //print the entryTable out
+            System.out.println(toTable(entryTable, false));
+        }
         
-        
-        
-    }
+    } // End of viewTicket.
 
     //creates a ticket entry which is by default assigned to the creator. Only technicians with
     //level 1 or > 0 can assign this ticket to a different technician

@@ -1,3 +1,5 @@
+// Changed creator and dates from type Technician to type String
+
 
 package dataobjects;
 
@@ -12,9 +14,9 @@ public class Entry {
     
     //=====================  Instance Variables  ======================//
     private int ID;                 //id of entry used for association in the database
-    private Date creationDate;      //date entry was created
-    private Date modifiedDate;      //date entry was last modified
-    private Technician creator;     //creator of the entry
+    private String creationDate;      //date entry was created
+    private String modifiedDate;      //date entry was last modified
+    private String creator;     //creator of the entry
     private Technician editor;      //last editor of the entry
     private String text;            //text of the entry
     
@@ -27,7 +29,7 @@ public class Entry {
      * @param creator
      * @param text 
      */
-    public Entry(int ID,Date creationDate, Technician creator, String text) {
+    public Entry(int ID, String creationDate, String creator, String text) {
         this.ID = ID;
         this.creationDate = creationDate;
         this.modifiedDate = null;
@@ -46,7 +48,7 @@ public class Entry {
      * @param editor
      * @param text 
      */
-    public Entry(int ID, Date creationDate, Date modifiedDate, Technician creator, Technician editor, String text) {
+    public Entry(int ID, String creationDate, String modifiedDate, String creator, Technician editor, String text) {
         this.ID = ID;
         this.creationDate = creationDate;
         this.modifiedDate = modifiedDate;
@@ -70,7 +72,7 @@ public class Entry {
      * Get date entry was created
      * @return 
      */
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
@@ -78,7 +80,7 @@ public class Entry {
      * get date entry was last modified
      * @return null if the post has no modification date
      */
-    public Date getModifiedDate() {
+    public String getModifiedDate() {
         return modifiedDate;
     }
 
@@ -86,7 +88,7 @@ public class Entry {
      * get technician that created the entry
      * @return 
      */
-    public Technician getCreator() {
+    public String getCreator() {
         return creator;
     }
 
@@ -113,8 +115,8 @@ public class Entry {
      * @param modifiedDate
      * @return date of previous modification
      */
-    public Date setModifiedDate(Date modifiedDate) {
-        Date oldDate = modifiedDate;
+    public String setModifiedDate(String modifiedDate) {
+        String oldDate = modifiedDate;
         this.modifiedDate = modifiedDate;
         return oldDate;
     }
