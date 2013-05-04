@@ -47,7 +47,7 @@ public class Entries implements DBTable {
   public List<Entry>fetchAllFromTicket(int ticketID) throws Exception {
       Connection cx = db.connect();
 
-     String sql = "select * "
+     String sql = "select entries.id, entries.creationDate, entries.creator, entries.text "
                 + "from ticket_entries join tickets join entries on "
                 + "tickets.id = ticket_entries.ticket_id and "
                 + "entries.id = ticket_entries.entry_id where tickets.id=?";

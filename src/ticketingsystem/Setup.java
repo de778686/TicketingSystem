@@ -56,20 +56,16 @@ public class Setup {
                 return;
             }
 
-
             // =======================================================================
             // Test data:
-
-            tickets.add(001, "title1", "open", "Bob", "ABC Broadcasting", "Today");
+            tickets.add(001, "title1", "open", "Bob", "ABC Broadcasting", "7/8/81");
             tickets.add(002, "title2", "closed", "Steve", "Philmont Acadamey", "8/7/13");
             tickets.add(003, "title3", "open", "Steve", "Philmont Acadamey", "8/7/13");
-
 
             System.out.println("\n\nOur Tickets are: ");
             for (Ticket t : tickets.fetchAll()) {
                 System.out.println(t.toString());
             }
-
 
             technicians.add("a", "a", "A", 0); // For testing
             technicians.add("corbus", "maximus1", "Corbin", 0);  // 1
@@ -81,14 +77,12 @@ public class Setup {
                 System.out.println(t.toString());
             }
 
-
             // Add a technician to a ticket: (TechID, TicketID)
             ticket_technicians.add(1, 1); // put Gary on ticket 1
             ticket_technicians.add(1, 2); // put Gary on ticket 2
             ticket_technicians.add(2, 1); // put Peter on ticket 1
             ticket_technicians.add(3, 1);
             ticket_technicians.add(3, 3); // put Corbin on Ticket 
-
 
             // Fetch all of Tech #1 tickets:
             System.out.println("\n\nTechnician 1's tickets:");
@@ -101,7 +95,6 @@ public class Setup {
             for (Ticket t : tickets.fetchAllForTechnician(3)) {
                 System.out.println(t.toString());
             }
-
 
             // This call removes a technician from a ticket
             ticket_technicians.remove(3, 1);
@@ -116,7 +109,6 @@ public class Setup {
             entries.add("1/1/13", "Corbin", "Had a lot of fun working with the ball");
             // Associate it with appropriate ticket: (entryID, ticketID)
             ticket_entries.add(2, 1);
-
 
         } catch (Exception ex) {
             ex.printStackTrace();

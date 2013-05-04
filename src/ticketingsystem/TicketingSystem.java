@@ -33,6 +33,7 @@ public class TicketingSystem implements Runnable {
     private Technician currentUser = null;  //authenticated user, null if not authenticated
     private Tickets tickets = new Tickets();  //tickets database table access
     private Entries entries = new Entries();
+    private TicketEntries ticketEntries = new TicketEntries();
     private Technicians technicians = new Technicians();
     private TicketTechnicians ticketTechnicians = new TicketTechnicians();    //ticketTechnicians database table access
     private Scanner keyboard = new Scanner(System.in);
@@ -289,7 +290,7 @@ public class TicketingSystem implements Runnable {
         
         String[] standardOptions = {
                       "1 - View ticket details",
-                      "2 - Add entry",
+                      "2 - Add entry",  // DavidE
                       "3 - Go Back"
                     };
         String prompt = "Please select one of the following options";            
@@ -305,7 +306,12 @@ public class TicketingSystem implements Runnable {
                     viewTicket(ticketID);
                     break;
                 case '2':
-                    
+                    try {
+                        addEntry(ticketID);
+                    } catch (Exception ex) {
+                        System.out.println("Unable to add entry");
+                        ex.printStackTrace();
+                    }
                     break;
                 case '3':
                     //leave method to return to previous menu
@@ -429,6 +435,29 @@ public class TicketingSystem implements Runnable {
         
     }
 
+    
+    // Creates an entry and links it to the ticket specified by the parameter(ticketID):
+    public void addEntry(int ticketID) throws Exception {
+        Entry entry;
+        String creationDate;
+        String creatorName;
+        String text;
+        
+        System.out.println("creationDate:");
+        creationDate = keyboard.nextLine();
+        System.out.println("creatorName:");
+        creatorName = keyboard.nextLine();
+        System.out.println("text:");
+        text = keyboard.nextLine();
+        
+        // creates entry in DataBase:
+        entry = entries.add(creationDate, creatorName, text);
+        
+        // links entry to ticket:
+        ticketEntries.add(entry.getID(), ticketID);
+    }
+    
+    
     //update ticket information with limitations based on technician level
     public void updateTicket() {
         
