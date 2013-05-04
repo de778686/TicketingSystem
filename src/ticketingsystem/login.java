@@ -38,7 +38,7 @@ public class login {
     }
     
     //methods
-    public boolean validate(){
+    public boolean validate() throws Exception{
         
         boolean valid = false;
         Technician currentTech = new Technician(userName, pswd);
@@ -58,7 +58,7 @@ public class login {
             }
         }
         catch(Exception ex){
-            System.out.println("Error loading technicians collection");
+            throw new Exception("Error loading technicians collection");
         }
         
         return valid;

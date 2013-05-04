@@ -178,7 +178,7 @@ public class Tickets implements DBTable {
 
     Collection<Ticket> coll = new LinkedHashSet<Ticket>();
     while (rs.next()) {
-      int ticketID = rs.getInt("id");
+      int ticketID = rs.getInt("ticket_id");
       String title = rs.getString("title");
       String status = rs.getString("status");
       String creator = rs.getString("creator");
