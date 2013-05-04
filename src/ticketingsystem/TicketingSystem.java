@@ -138,7 +138,11 @@ public class TicketingSystem implements Runnable {
 
                     //add a ticket
                     case '2':
-                        addTicket();
+                        try {
+                            addTicket();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                         break;
 
                     //add a technician
@@ -181,7 +185,11 @@ public class TicketingSystem implements Runnable {
 
                     //add a ticket
                     case '2':
-                        addTicket();
+                        try {
+                            addTicket();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                         break;
 
                     case 'Q':
@@ -434,7 +442,29 @@ public class TicketingSystem implements Runnable {
 
     //creates a ticket entry which is by default assigned to the creator. Only technicians with
     //level 1 or > 0 can assign this ticket to a different technician
-    public void addTicket() {
+    // UI-G/14: DavidE
+    public void addTicket() throws Exception{
+        int    ID;
+        String title;
+        String status;
+        String creator;
+        String client;
+        String dateCreated;
+        
+        System.out.println("ID: ");
+        ID = Integer.parseInt(keyboard.nextLine());
+        System.out.println("title: ");
+        title = keyboard.nextLine();
+        System.out.println("status: ");
+        status = keyboard.nextLine();
+        System.out.println("creator: ");
+        creator = keyboard.nextLine();
+        System.out.println("client: ");
+        client = keyboard.nextLine();
+        System.out.println("dateCreated: ");
+        dateCreated = keyboard.nextLine();
+        
+        tickets.add(ID, title, status, creator, client, dateCreated);
     }
 
     // Creates an entry and links it to the ticket specified by the parameter(ticketID):

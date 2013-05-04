@@ -21,9 +21,6 @@ public class Tickets implements DBTable {
   // collect Clients:
   String clients = new String();  
   Collection<String> clientColl = new LinkedHashSet<String>();
-  
-   
-    
 
   @Override
   public String getTableName() { return table; }
@@ -42,9 +39,8 @@ public class Tickets implements DBTable {
      * @throws Exception
      */
   
-  
   //  Simple version:
-  public Ticket add(int ID,String title, String status, String creator,
+  public Ticket add(int ID, String title, String status, String creator,
           String client, String dateCreated) throws Exception {
     Connection cx = db.connect();
     String sql;

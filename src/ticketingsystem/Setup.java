@@ -58,6 +58,7 @@ public class Setup {
 
             // =======================================================================
             // Test data:
+            // The user selects ticket ID in case the company takes a ticket from another company.
             tickets.add(001, "title1", "open", "Bob", "ABC Broadcasting", "7/8/81");
             tickets.add(002, "title2", "closed", "Steve", "Philmont Acadamey", "8/7/13");
             tickets.add(003, "title3", "open", "Steve", "Philmont Acadamey", "8/7/13");
@@ -68,6 +69,7 @@ public class Setup {
             }
 
             technicians.add("a", "a", "A", 0); // For testing
+            technicians.add("b", "b", "B", 1); // Admin For testing
             technicians.add("corbus", "maximus1", "Corbin", 0);  // 1
             technicians.add("davidus", "apple1", "David", 0);  // 2
             technicians.add("quinntus", "mango1", "Quinn", 1); // 2
