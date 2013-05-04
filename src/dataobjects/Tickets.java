@@ -40,21 +40,20 @@ public class Tickets implements DBTable {
      */
   
   //  Simple version:
-  public Ticket add(int ID, String title, String status, String creator,
+  public Ticket add(String title, String status, String creator,
           String client, String dateCreated) throws Exception {
     Connection cx = db.connect();
     String sql;
    
     sql = String.format(
-      "insert into `%s` (`id`, `title`,`status`,`creator`, `client`, `dateCreated`, `dateModified`) values (?,?,?,?,?,?,?)", table);
+      "insert into `%s` (`title`,`status`,`creator`, `client`, `dateCreated`, `dateModified`) values (?,?,?,?,?,?)", table);
     PreparedStatement st = cx.prepareStatement(sql);
-    st.setInt(1, ID);
-    st.setString(2,title);
-    st.setString(3, status);
-    st.setString(4, creator);
-    st.setString(5, client);
-    st.setString(6, dateCreated);
-    st.setString(7, "");
+    st.setString(1,title);
+    st.setString(2, status);
+    st.setString(3, creator);
+    st.setString(4, client);
+    st.setString(5, dateCreated);
+    st.setString(6, "");
     
     st.executeUpdate();
 

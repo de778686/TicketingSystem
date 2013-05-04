@@ -59,9 +59,9 @@ public class Setup {
             // =======================================================================
             // Test data:
             // The user selects ticket ID in case the company takes a ticket from another company.
-            tickets.add(001, "title1", "open", "Bob", "ABC Broadcasting", "7/8/81");
-            tickets.add(002, "title2", "closed", "Steve", "Philmont Acadamey", "8/7/13");
-            tickets.add(003, "title3", "open", "Steve", "Philmont Acadamey", "8/7/13");
+            tickets.add("title1", "open", "Bob", "ABC Broadcasting", "7/8/81");
+            tickets.add("title2", "closed", "Steve", "Philmont Acadamey", "8/7/13");
+            tickets.add("title3", "open", "Steve", "Philmont Acadamey", "8/7/13");
 
             System.out.println("\n\nOur Tickets are: ");
             for (Ticket t : tickets.fetchAll()) {

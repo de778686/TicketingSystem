@@ -2,8 +2,11 @@ package ticketingsystem;
 
 import java.util.LinkedHashSet;
 import dataobjects.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -162,7 +165,7 @@ public class TicketingSystem implements Runnable {
 
                     //modify technician level
                     case '4':
-                        assignTechnician();
+                        //assignTechnician();
                         break;
 
                     //quit program
@@ -309,7 +312,7 @@ public class TicketingSystem implements Runnable {
             String[] standardOptions = {
                 "1 - View ticket details",
                 "2 - Add entry", // DavidE
-                "3 - Go Back"
+                "q - Go Back"
             };
             String prompt = "Please select one of the following options";
 
@@ -332,10 +335,9 @@ public class TicketingSystem implements Runnable {
                             ex.printStackTrace();
                         }
                         break;
-                    case '3':
+                    case 'Q':
                         //leave method to return to previous menu
                         return;
-
                 }
             }
         }
@@ -395,7 +397,7 @@ public class TicketingSystem implements Runnable {
         }
 
         //print out title
-        System.out.println(head("Ticket Info:") + NL);
+        System.out.println(head("Ticket Info:"));
 
         //print out description
         System.out.println(ticket.getTitle());
@@ -445,7 +447,7 @@ public class TicketingSystem implements Runnable {
             entryTable.add(entryRow4);
 
             //print the entryTable out
-            System.out.println(toTable(entryTable, false));
+            System.out.print(toTable(entryTable, false));
         }
 
     } // End of viewTicket.
@@ -454,27 +456,36 @@ public class TicketingSystem implements Runnable {
     //level 1 or > 0 can assign this ticket to a different technician
     // UI-G/14: DavidE
     public void addTicket() throws Exception{
-        int    ID;
+
         String title;
         String status;
         String creator;
         String client;
         String dateCreated;
         
-        System.out.println("ID: ");
-        ID = Integer.parseInt(keyboard.nextLine());
         System.out.println("title: ");
         title = keyboard.nextLine();
         System.out.println("status: ");
         status = keyboard.nextLine();
-        System.out.println("creator: ");
-        creator = keyboard.nextLine();
+        
+        creator = currentUser.getName();
+//        System.out.println("creator: ");
+//        creator = keyboard.nextLine();
         System.out.println("client: ");
         client = keyboard.nextLine();
-        System.out.println("dateCreated: ");
-        dateCreated = keyboard.nextLine();
+ 
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        dateCreated = dateFormat.format(date);
+//        System.out.println("dateCreated: ");
+//        dateCreated = keyboard.nextLine();
         
-        tickets.add(ID, title, status, creator, client, dateCreated);
+        Ticket t = tickets.add(title, status, creator, client, dateCreated);
+        
+        assignTechnician(currentUser.getID(), t.getID());
+        
+        //add first entry
+        addEntry(t.getID());
     }
 
     // Creates an entry and links it to the ticket specified by the parameter(ticketID):
@@ -484,10 +495,17 @@ public class TicketingSystem implements Runnable {
         String creatorName;
         String text;
 
-        System.out.println("creationDate:");
-        creationDate = keyboard.nextLine();
-        System.out.println("creatorName:");
-        creatorName = keyboard.nextLine();
+        //set creationDate and creatorName based on system information
+        //to limit amount of input needed from user
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        creationDate = dateFormat.format(date);
+        creatorName = currentUser.getName();
+        
+//        System.out.println("creationDate:");
+//        creationDate = keyboard.nextLine();
+//        System.out.println("creatorName:");
+//        creatorName = keyboard.nextLine();
         System.out.println("text:");
         text = keyboard.nextLine();
 
@@ -551,7 +569,11 @@ public class TicketingSystem implements Runnable {
         return sc.nextLine();
     }
 
-    private void assignTechnician() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void assignTechnician(int technician_id, int ticket_id) {
+        try{
+            ticketTechnicians.add(technician_id, ticket_id);
+        }catch(Exception e){
+            System.out.println("Unable to assign technician at this time");
+        }
     }
 }
