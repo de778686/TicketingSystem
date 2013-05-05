@@ -561,6 +561,11 @@ public class TicketingSystem implements Runnable {
         }
     }
     
+    /**
+     * assignTechnician prompts user to select a technician and then
+     * to select a ticket and assigns the selected technician to the
+     * selected ticket
+     */
     public void assignTechnician(){
 
         Collection<Technician> allTechs;
@@ -598,14 +603,18 @@ public class TicketingSystem implements Runnable {
             ticketMap.put(t.getTitle(), t.getID());
         }
         
+        //prompt for technician selection
         String prompt = "Select a technician from the following:";
         technician_id = SelectOption.autoIntegerOption(prompt, techMap);
         
+        //prompt for ticket selection
         prompt = "Select a ticket from the following:";
         ticket_id = SelectOption.autoIntegerOption(prompt, ticketMap);
     
         
-        System.out.println("techID=" + technician_id + ";  ticketID=" + ticket_id);
+        //System.out.println("techID=" + technician_id + ";  ticketID=" + ticket_id);
+        
+        //assign technician and provide feedback
         assignTechnician(technician_id, ticket_id);
         System.out.println("Assignment complete.");
         
