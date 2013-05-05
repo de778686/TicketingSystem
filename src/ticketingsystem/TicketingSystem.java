@@ -2,6 +2,7 @@ package ticketingsystem;
 
 import java.util.LinkedHashSet;
 import dataobjects.*;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -541,6 +542,48 @@ public class TicketingSystem implements Runnable {
 
     //adds a new entry into the technician table. only technicians with level > 0 can do this.
     public void addTechnician() {
+        
+        //=====================  Local Data  ======================//
+        String username, password, name;
+        int level;
+        
+        boolean entryFinished = false;
+        
+        do{
+
+            //get technician information
+            System.out.println("Enter the following information about the technician");
+            System.out.println("Username");
+            username = keyboard.nextLine();
+            System.out.println("Password");
+            password = keyboard.nextLine();
+            System.out.println("Name");
+            name = keyboard.nextLine();
+            char levelChar = SelectOption.variableOption("Select a level:", 
+                    new String[]{"a = Admin", "s = Standard"}, 's');
+            level = (levelChar =='A') ? 1 :  0; 
+
+            //add technician
+            try{
+                Technician t = technicians.add(username, password, name, level);
+                entryFinished = true;
+            } catch(SQLException sqle){
+
+                if(sqle.getSQLState().equals("23000")){
+                    System.out.println("Duplicate name not allowed.");
+                } else {
+                    System.out.println("Unable to add technician at this time." 
+                        + NL + "Please try again later.");
+                }
+
+            } catch(Exception e){
+
+                System.out.println("Unable to add technician at this time." 
+                        + NL + "Please try again later.");
+            }
+            
+        } while (!entryFinished);
+        
     }
 
     //modifies the level of the technician. only technicians with level > 0 can do this.
