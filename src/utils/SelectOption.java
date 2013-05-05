@@ -2,6 +2,8 @@
 package utils;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -190,6 +192,61 @@ public class SelectOption {
     }
     
     /**
+     * autoIntegerOption prompts users to select from a set of choices, and
+     * each choice is numbered automatically.  The method loops until valid
+     * input has been entered and returns an integer value paired with
+     * the option string in the optionMap map
+     * @param prompt - prompt string
+     * @param opts - map of option descriptions (strings) onto integer indicators
+     * @return 
+     */
+    public static int autoIntegerOption(String prompt, Map<String, Integer> optionMap){
+        
+        //do the validation
+        String input; //string to hold input
+        String[] opts = new String[optionMap.keySet().size()];
+        opts = optionMap.keySet().toArray(opts);
+        int response = optionMap.get(opts[0]);
+        boolean validResponse = false;
+        Map<Integer,String> choiceMap;
+        
+        System.out.print(CFormat.NL + prompt + "  [" + opts[0] + "]");
+        
+        choiceMap = printOptions(opts, true);
+        
+        do{
+            input = keyboard.nextLine().trim().toUpperCase();
+
+            //if default is selected, return default
+            if(input.equals("")){
+                return response;
+            }
+            
+            //if input is an integer, see if it represents a valid choice
+            if(isInteger(input)){
+                Integer iValue = Integer.parseInt(input);                
+                if(choiceMap.containsKey(iValue)){
+                    
+                    //choice is valid, return the appropriate value
+                    response = optionMap.get(choiceMap.get(iValue));
+                    validResponse = true;
+                    
+                }
+            }
+            
+            //if invalid, repeat process
+            if(!validResponse){
+                System.out.println("Invalid Entry.  "
+                        + "Please choose from the following:");
+                printOptions(opts, true);
+            }
+            
+        }while(!validResponse);
+        
+        return response;
+    }
+    
+    /**
      * printOptions prints out an options list at the end of the current line
      * @param opts 
      */
@@ -200,6 +257,38 @@ public class SelectOption {
             System.out.print(CFormat.NL + CFormat.addIndent(opts[i], 1));
         }
         System.out.println(CFormat.NL);
+    }
+    
+    /**
+     * printOptions prints out an option list at the end of the current line
+     * and returns null.  If the "addNumbers" flag is set, each option string is
+     * prefixed with an integer, and a map of the prefix to the original string
+     * is returned
+     * @param opts
+     * @param addNumers
+     * @return 
+     */
+    private static Map<Integer, String> printOptions(String[] opts, boolean addNumbers){
+        
+        if(addNumbers){
+
+            //map of option strings to integers
+            Map<Integer, String> map = new HashMap<>();
+
+            System.out.println(CFormat.NL);
+            for(int i = 0; i < opts.length; i++){
+                System.out.print(CFormat.NL + (i+1) + " - " + CFormat.addIndent(opts[i], 1));
+                map.put((i+1), opts[i]);
+            }
+            System.out.println(CFormat.NL);
+
+            return map;
+        
+        } else {
+            printOptions(opts);
+            return null;
+        }
+        
     }
     
     /**

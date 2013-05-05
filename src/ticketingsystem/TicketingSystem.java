@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -583,37 +584,25 @@ public class TicketingSystem implements Runnable {
             return;
         }
         
-        //create string options for SelectOption parsing
-        //and create association of the response characters with
-        //IDs of the techs
-        String[] techOps = new String[allTechs.size()];
-        HashMap<Character, Integer> techMap = new HashMap<>();
-        int i = 0;
+        //create map associating tech names with their
+        //id's for selection
+        Map<String, Integer> techMap = new HashMap<>();
         for(Technician t : allTechs){
-            techOps[i] = (i+1) + " - " + t.getUsername();
-            techMap.put(techOps[i].charAt(0), t.getID());
-            i++;
+            techMap.put(t.getUsername(), t.getID());
         }
         
-        //create string options for SelectOption parsing
-        //and create association of the response characters with
-        //IDs of the tickets
-        String[] ticketOps = new String[allTickets.size()];
-        HashMap<Character, Integer> ticketMap = new HashMap<>();
-        i = 0;
+        //create map associating ticket titles with their
+        //id's for selection
+        Map<String, Integer> ticketMap = new HashMap<>();
         for(Ticket t : allTickets){
-            ticketOps[i] = (i+1) + " - " + t.getTitle();
-            ticketMap.put(ticketOps[i].charAt(0), t.getID());
-            i++;
+            ticketMap.put(t.getTitle(), t.getID());
         }
         
         String prompt = "Select a technician from the following:";
-        char response = SelectOption.variableOption(prompt, techOps, '1');
-        technician_id = techMap.get(response);
+        technician_id = SelectOption.autoIntegerOption(prompt, techMap);
         
         prompt = "Select a ticket from the following:";
-        response = SelectOption.variableOption(prompt, ticketOps, '1');
-        ticket_id = ticketMap.get(response);
+        ticket_id = SelectOption.autoIntegerOption(prompt, ticketMap);
     
         
         System.out.println("techID=" + technician_id + ";  ticketID=" + ticket_id);
