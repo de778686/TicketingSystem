@@ -143,7 +143,8 @@ public class SelectOption {
         
         //do the validation
         String input;
-        String response = Character.toString(defaultOption).toUpperCase();//this must be reset later
+        String prefix = Character.isDigit(defaultOption) ? "I" : "C";
+        String response = prefix + Character.toString(defaultOption).toUpperCase();//this must be reset later
         boolean validResponse = false;
         
         System.out.print(CFormat.NL + prompt + "  [" + defaultOption + "]");

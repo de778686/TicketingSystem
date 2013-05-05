@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -166,7 +167,7 @@ public class TicketingSystem implements Runnable {
 
                     //modify technician level
                     case '4':
-                        //assignTechnician();
+                        assignTechnician();
                         break;
 
                     //quit program
@@ -241,7 +242,7 @@ public class TicketingSystem implements Runnable {
                 if (currentUser.getLevel() == STANDARD) {
                     ticketSet = tickets.fetchAllForTechnician(currentUser.getID());
                 } else {
-                    //TODO implement for admin in UI-G/19
+                    ticketSet = tickets.fetchAll();
                 }
             } catch (Exception e) {
 
@@ -253,8 +254,11 @@ public class TicketingSystem implements Runnable {
             }
 
             //print header
-            System.out.println(head("Assigned Tickets"));
-
+            if(currentUser.getLevel() == STANDARD){
+                System.out.println(head("Assigned Tickets"));
+            } else {
+                System.out.println(head("All Tickets"));
+            }
             //if there are tickets for the user, print tickets formatted by id
 
             Collection<Integer> ticketIDs = new HashSet<>();
@@ -315,31 +319,46 @@ public class TicketingSystem implements Runnable {
                 "2 - Add entry", // DavidE
                 "q - Go Back"
             };
+            String[] adminOptions = {
+                "1 - View ticket details",
+                "2 - Add entry", // DavidE
+                "3 - Assign Technician",
+                "q - Go Back"
+            };
+            
             String prompt = "Please select one of the following options";
 
-            char choice; //hold user's menu choice
+            char choice = 'l'; //hold user's menu choice
 
             if (currentUser.getLevel() == STANDARD) {
                 choice = SelectOption.variableOption(prompt, standardOptions, '1');
+            } else if(currentUser.getLevel() == ADMIN) {
+                choice = SelectOption.variableOption(prompt, adminOptions, 'l');  
+            }
+            
+            switch (choice) {
 
-                switch (choice) {
-
-                    case '1':
+                case '1':
+                    viewTicket(ticketID);
+                    break;
+                case '2':
+                    try {
+                        addEntry(ticketID);
                         viewTicket(ticketID);
-                        break;
-                    case '2':
-                        try {
-                            addEntry(ticketID);
-                            viewTicket(ticketID);
-                        } catch (Exception ex) {
-                            System.out.println("Unable to add entry");
-                            ex.printStackTrace();
-                        }
-                        break;
-                    case 'Q':
-                        //leave method to return to previous menu
-                        return;
-                }
+                    } catch (Exception ex) {
+                        System.out.println("Unable to add entry");
+                        ex.printStackTrace();
+                    }
+                    break;
+                    
+                //case three is only accessible to admins based on the
+                //options sent to SelectOption.variableOption()
+                case '3':
+                    assignTechnician();
+                    break;
+                case 'Q':
+                    //leave method to return to previous menu
+                    return;
             }
         }
     }
@@ -387,13 +406,14 @@ public class TicketingSystem implements Runnable {
             //make first row of tech info have row title
             ArrayList<String> row4 = new ArrayList<>();
             row4.add("Assigned Technicians:");
-            row4.add(techs.get(0).getName());
+            row4.add(techs.get(0).getUsername());
             table.add(row4);
 
             for (int i = 1; i < techs.size(); i++) {
                 row4 = new ArrayList<>();
                 row4.add("");
-                row4.add(techs.get(i).getName());
+                row4.add(techs.get(i).getUsername());
+                table.add(row4);
             }
         }
 
@@ -538,6 +558,68 @@ public class TicketingSystem implements Runnable {
         } catch (NumberFormatException e) {
             System.out.println("Error: Not a number.");
         }
+    }
+    
+    public void assignTechnician(){
+
+        Collection<Technician> allTechs;
+        Collection<Ticket> allTickets;
+        int technician_id;
+        int ticket_id;
+        
+        
+        //grab lists of technicians and tickets
+        try{
+            allTechs = technicians.fetchAll();
+            allTickets = tickets.fetchAll();
+        }catch(Exception e){
+            System.out.println("Unable to assign ticket at this time.");
+            return;
+        }
+        
+        //if there are no tickets, assignment is impossible
+        if(allTickets.isEmpty()){
+            System.out.println("No tickets available for assignment");
+            return;
+        }
+        
+        //create string options for SelectOption parsing
+        //and create association of the response characters with
+        //IDs of the techs
+        String[] techOps = new String[allTechs.size()];
+        HashMap<Character, Integer> techMap = new HashMap<>();
+        int i = 0;
+        for(Technician t : allTechs){
+            techOps[i] = (i+1) + " - " + t.getUsername();
+            techMap.put(techOps[i].charAt(0), t.getID());
+            i++;
+        }
+        
+        //create string options for SelectOption parsing
+        //and create association of the response characters with
+        //IDs of the tickets
+        String[] ticketOps = new String[allTickets.size()];
+        HashMap<Character, Integer> ticketMap = new HashMap<>();
+        i = 0;
+        for(Ticket t : allTickets){
+            ticketOps[i] = (i+1) + " - " + t.getTitle();
+            ticketMap.put(ticketOps[i].charAt(0), t.getID());
+            i++;
+        }
+        
+        String prompt = "Select a technician from the following:";
+        char response = SelectOption.variableOption(prompt, techOps, '1');
+        technician_id = techMap.get(response);
+        
+        prompt = "Select a ticket from the following:";
+        response = SelectOption.variableOption(prompt, ticketOps, '1');
+        ticket_id = ticketMap.get(response);
+    
+        
+        System.out.println("techID=" + technician_id + ";  ticketID=" + ticket_id);
+        assignTechnician(technician_id, ticket_id);
+        System.out.println("Assignment complete.");
+        
     }
 
     //adds a new entry into the technician table. only technicians with level > 0 can do this.
